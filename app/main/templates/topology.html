@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}链路拓扑图{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/topology.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="banner">链路拓扑图</div>
+
+<h1 class="page-title">网络链路拓扑</h1>
+<p class="page-subtitle">
+    从 Excel / CSV 或粘贴表格导入链路数据，自动生成拓扑图。节点可拖动，位置可保存到浏览器本地。
+</p>
+
+<div class="topology-layout">
+    <aside class="topology-sidebar">
+        <section class="topology-panel">
+            <h3 class="topology-panel__title">导入链路数据</h3>
+            <p class="topology-hint">每行一条链路：A端设备、A端端口、B端设备、B端端口、属性1、属性2、属性3（首行可为表头）</p>
+            <input type="file" id="topology-file-input" accept=".xlsx,.xls,.csv,.tsv,.txt" class="topology-file-input">
+            <textarea id="topology-paste-input" class="topology-paste" spellcheck="false" placeholder="示例（Tab 或空格分隔，可从 Excel 直接粘贴）：
+A端设备	A端端口	B端设备	B端端口	属性1	属性2	属性3
+SW-A	Eth1/1	SW-B	Eth1/1	10G	光纤	正常
+SW-B	Eth1/2	SW-C	Eth1/1	10G	光纤	正常"></textarea>
+            <div class="topology-actions">
+                <button type="button" id="topology-import-btn">生成拓扑图</button>
+                <button type="button" id="topology-clear-data-btn" class="topology-btn--muted">清空数据</button>
+            </div>
+        </section>
+
+        <section class="topology-panel">
+            <h3 class="topology-panel__title">添加节点</h3>
+            <label for="topology-node-name">设备名称</label>
+            <input type="text" id="topology-node-name" class="topology-input" placeholder="例如 SW-A">
+            <button type="button" id="topology-add-node-btn" class="topology-btn-block">添加节点</button>
+        </section>
+
+        <section class="topology-panel">
+            <h3 class="topology-panel__title">添加链路</h3>
+            <div class="topology-form-grid">
+                <div>
+                    <label for="topology-link-a-device">A端设备</label>
+                    <input type="text" id="topology-link-a-device" class="topology-input">
+                </div>
+                <div>
+                    <label for="topology-link-a-port">A端端口</label>
+                    <input type="text" id="topology-link-a-port" class="topology-input">
+                </div>
+                <div>
+                    <label for="topology-link-b-device">B端设备</label>
+                    <input type="text" id="topology-link-b-device" class="topology-input">
+                </div>
+                <div>
+                    <label for="topology-link-b-port">B端端口</label>
+                    <input type="text" id="topology-link-b-port" class="topology-input">
+                </div>
+                <div>
+                    <label for="topology-link-attr1">属性1</label>
+                    <input type="text" id="topology-link-attr1" class="topology-input">
+                </div>
+                <div>
+                    <label for="topology-link-attr2">属性2</label>
+                    <input type="text" id="topology-link-attr2" class="topology-input">
+                </div>
+                <div class="topology-form-grid--full">
+                    <label for="topology-link-attr3">属性3</label>
+                    <input type="text" id="topology-link-attr3" class="topology-input">
+                </div>
+            </div>
+            <button type="button" id="topology-add-link-btn" class="topology-btn-block">添加链路</button>
+        </section>
+
+        <section class="topology-panel">
+            <h3 class="topology-panel__title">布局与导出</h3>
+            <div class="topology-actions topology-actions--stack">
+                <button type="button" id="topology-save-pos-btn">保存节点位置</button>
+                <button type="button" id="topology-load-pos-btn">恢复节点位置</button>
+                <button type="button" id="topology-auto-layout-btn" class="topology-btn--muted">自动布局</button>
+                <button type="button" id="topology-export-json-btn">导出 JSON</button>
+                <button type="button" id="topology-import-json-btn">导入 JSON</button>
+                <input type="file" id="topology-json-file-input" accept=".json" class="topology-file-input topology-file-input--hidden">
+            </div>
+        </section>
+
+        <section class="topology-panel topology-panel--stats">
+            <p id="topology-stats" class="topology-stats">节点 0 · 链路 0</p>
+            <p id="topology-status" class="topology-status" role="status"></p>
+        </section>
+    </aside>
+
+    <div class="topology-canvas-wrap">
+        <div id="topology-network" class="topology-network" aria-label="拓扑图画布"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="{{ url_for('static', filename='js/topology.js') }}"></script>
+{% endblock %}

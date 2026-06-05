@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}配置生成器{% endblock %}
+
+{% block content %}
+<div class="banner">配置生成页面</div>
+
+<div class="container" spellcheck="false">
+    <div class="column left-column">
+        <h3>目录</h3>
+        <ul id="file-list">
+            {% for file in files %}
+            <li data-filename="{{ file }}">{{ file }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="column middle-column">
+        <label>YAML 数据</label>
+        <textarea id="yaml-data-textarea"></textarea>
+    </div>
+
+    <div class="column right-column">
+        <div class="header-row">
+            <label>配置模板</label>
+            <button id="generate-button">开始生成配置</button>
+        </div>
+        <textarea id="j2-template-textarea"></textarea>
+    </div>
+</div>
+
+<div class="full-width-textarea">
+    <label>生成的配置</label>
+    <textarea id="generated-config-textarea" readonly></textarea>
+</div>
+
+<div class="full-width-textarea">
+    <label>发向后端的JSON数据</label>
+    <textarea id="json-data-textarea" readonly></textarea>
+</div>
+
+<script src="{{ url_for('static', filename='js/config_generator.js') }}"></script>
+{% endblock %}

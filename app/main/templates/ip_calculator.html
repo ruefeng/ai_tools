@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}IP计算{% endblock %}
+
+{% block content %}
+<div class="banner">IP计算页面</div>
+
+<div style="display: none;">
+    <textarea id="ipv4-address-textarea"></textarea>
+    <textarea id="ipv6-address-textarea"></textarea>
+</div>
+
+<div class="table-container">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <h3 style="margin: 0;">Excel表格输入（可直接粘贴两列数据）</h3>
+        <div style="display: flex; gap: 10px;">
+            <button id="add-row-button" class="button" style="margin: 0;">添加行</button>
+            <button id="clear-table-button" class="button" style="margin: 0;">清空表格</button>
+        </div>
+    </div>
+    <div class="table-wrapper">
+        <table id="input-table">
+            <thead>
+                <tr>
+                    <th>IPv4地址</th>
+                    <th>IPv6地址</th>
+                    <th style="width: 60px;">操作</th>
+                </tr>
+            </thead>
+            <tbody id="input-table-body">
+            </tbody>
+        </table>
+    </div>
+    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--muted);">
+        提示：可在Excel中选择两列数据，直接粘贴到表格中
+    </p>
+</div>
+
+<br>
+<button id="calculate-button">开始计算IP</button>
+
+<div class="container">
+    <div class="column left-column">
+    <label>计算出来的IPV4数据</label>
+    <textarea id="calculated4-data-textarea"></textarea>
+    </div>
+
+    <div class="column right-column">
+    <label>计算出来的IPV6数据</label>
+    <textarea id="calculated6-data-textarea"></textarea>
+    </div>
+</div>
+
+<br>
+<div class="table-container">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <h3 style="margin: 0;">计算结果表格（可选中复制到Excel）</h3>
+        <button id="copy-selected-button" class="button" style="margin: 0;">复制选中区域</button>
+    </div>
+    <div class="table-wrapper">
+        <table id="result-table">
+            <thead>
+                <tr>
+                    <th>IPv4输入</th>
+                    <th>IPv6输入</th>
+                    <th>IPv4结果</th>
+                    <th>IPv6结果</th>
+                </tr>
+            </thead>
+            <tbody id="result-table-body">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script src="{{ url_for('static', filename='js/ip_calculator.js') }}"></script>
+{% endblock %}

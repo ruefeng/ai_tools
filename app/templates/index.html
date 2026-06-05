@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}主页导航{% endblock %}
+
+{% block content %}
+    <h1 class="page-title">工具箱导航</h1>
+    <p class="page-subtitle">
+        选择一个工具开始使用。每个页面都支持直接粘贴多行数据，适合批量处理与复制结果。
+    </p>
+
+    <div class="card-grid" role="list">
+        <a class="card" role="listitem" href="{{ url_for('main.show_generator') }}">
+            <div class="card__title">配置生成</div>
+            <p class="card__desc">选择 YAML 与 Jinja2 模板，生成渲染后的配置文本。</p>
+        </a>
+
+        <a class="card" role="listitem" href="{{ url_for('main.show_calc') }}">
+            <div class="card__title">IP 计算</div>
+            <p class="card__desc">批量输入 IPv4/IPv6 CIDR，计算对端地址并输出。</p>
+        </a>
+
+        <a class="card" role="listitem" href="{{ url_for('main.show_text_to_yaml') }}">
+            <div class="card__title">文本转 YAML</div>
+            <p class="card__desc">按空白分列，使用第一列作为 topKey，转换为 YAML 并输出。</p>
+        </a>
+
+        <a class="card" role="listitem" href="{{ url_for('main.show_yaml_merge') }}">
+            <div class="card__title">YAML 合并</div>
+            <p class="card__desc">输入两份 YAML，按 topKey 合并为一份 YAML 并输出。</p>
+        </a>
+
+        <a class="card" role="listitem" href="{{ url_for('main.show_ucore_pe') }}">
+            <div class="card__title">ucore_pe互联配置生成</div>
+            <p class="card__desc">Excel 10 列数据转 YAML，结合 Jinja2 模板生成配置。</p>
+        </a>
+
+        <a class="card" role="listitem" href="{{ url_for('main.show_topology') }}">
+            <div class="card__title">链路拓扑图</div>
+            <p class="card__desc">从 Excel 导入链路数据，生成交互式拓扑图，支持拖动节点与保存布局。</p>
+        </a>
+    </div>
+{% endblock %}

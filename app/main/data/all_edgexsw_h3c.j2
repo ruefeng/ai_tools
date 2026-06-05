@@ -1,0 +1,1446 @@
+#
+sysname {{hostname}}
+#
+clock timezone beijing add 08:00:00
+#
+parity-error consistency-check log enable
+parity-error unrecoverable log enable
+parity-error unrecoverable reboot
+#
+link-aggregation global load-sharing algorithm 8
+#
+ip load-sharing mode per-flow dest-ip src-ip ip-pro dest-port src-port global
+#
+lldp global enable
+#
+burst-mode enable
+#
+system-working-mode standard
+hardware-resource switch-mode ROUTING
+y
+hardware-resource routing-mode ipv6-128
+y
+hardware-resource linkscan-mode software
+hardware-resource flex-mode disable
+password-recovery enable
+#
+vlan 1
+#
+undo stp global enable
+#
+interface Route-Aggregation100
+mtu 9000
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+link-aggregation mode dynamic
+#
+interface Route-Aggregation110
+mtu 9000
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+link-aggregation mode dynamic
+#
+interface Route-Aggregation110.10
+mtu 9000
+#
+interface Route-Aggregation110.20
+mtu 9000
+#
+interface Route-Aggregation120
+mtu 9000
+link-aggregation mode dynamic
+#
+interface Route-Aggregation120.10
+mtu 9000
+#
+interface Route-Aggregation120.20
+mtu 9000
+#
+interface NULL0
+#
+interface LoopBack0
+ip address {{lo_ip}} 255.255.255.255
+ipv6 address {{lo_ip6}}/128
+#
+interface range HundredGigE1/1/1 to HundredGigE1/1/16
+port link-mode route
+interface range HundredGigE1/2/1 to HundredGigE1/2/16
+port link-mode route
+interface range HundredGigE1/3/1 to HundredGigE1/3/16
+port link-mode route
+interface range HundredGigE1/4/1 to HundredGigE1/4/16
+port link-mode route
+interface range HundredGigE1/5/1 to HundredGigE1/5/16
+port link-mode route
+interface range HundredGigE1/6/1 to HundredGigE1/6/16
+port link-mode route
+interface range HundredGigE1/7/1 to HundredGigE1/7/16
+port link-mode route
+interface range HundredGigE1/8/1 to HundredGigE1/8/16
+port link-mode route
+#
+interface HundredGigE1/1/1
+port link-mode route
+mtu 9000
+link-delay up 5
+lacp period short
+port link-aggregation group 110
+#
+interface HundredGigE1/1/2
+port link-mode route
+mtu 9000
+link-delay up 5
+lacp period short
+port link-aggregation group 110
+#
+interface HundredGigE1/1/3
+port link-mode route
+mtu 9000
+link-delay up 5
+lacp period short
+port link-aggregation group 120
+#
+interface HundredGigE1/1/4
+port link-mode route
+mtu 9000
+link-delay up 5
+lacp period short
+port link-aggregation group 120
+#
+interface HundredGigE1/1/5
+port link-mode route
+mtu 9000
+link-delay up 5
+
+#
+interface HundredGigE1/1/6
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/1/7
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/1/8
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/1/9
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/1/10
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/1/13
+port link-mode route
+mtu 9000
+link-delay up 5
+lacp period short
+port link-aggregation group 100
+#
+interface HundredGigE1/1/14
+port link-mode route
+mtu 9000
+link-delay up 5
+lacp period short
+port link-aggregation group 100
+#
+interface HundredGigE1/1/15
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/1/16
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/2/1
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/2/2
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/2/3
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/2/4
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/2/5
+port link-mode route
+mtu 9000
+link-delay up 5
+
+#
+interface HundredGigE1/2/6
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/2/13
+port link-mode route
+mtu 9000
+link-delay up 5
+lacp period short
+port link-aggregation group 100
+#
+interface HundredGigE1/2/14
+port link-mode route
+mtu 9000
+link-delay up 5
+lacp period short
+port link-aggregation group 100
+#
+interface HundredGigE1/2/15
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/2/16
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/3/1
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/3/2
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/3/3
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/3/4
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/3/5
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/3/6
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/3/7
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/3/8
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/3/9
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/3/10
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/3/11
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/3/12
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/3/13
+port link-mode route
+mtu 9000
+link-delay up 5
+lacp period short
+port link-aggregation group 100
+#
+interface HundredGigE1/3/14
+port link-mode route
+mtu 9000
+link-delay up 5
+lacp period short
+port link-aggregation group 100
+#
+interface HundredGigE1/3/15
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/3/16
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/4/1
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/4/2
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/4/3
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/4/4
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/4/5
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/4/6
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/4/7
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/4/8
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/4/9
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/4/10
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/4/11
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/4/12
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/4/13
+port link-mode route
+mtu 9000
+link-delay up 5
+lacp period short
+port link-aggregation group 100
+#
+interface HundredGigE1/4/14
+port link-mode route
+mtu 9000
+link-delay up 5
+lacp period short
+port link-aggregation group 100
+#
+interface HundredGigE1/4/15
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/4/16
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/5/1
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/5/2
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/5/3
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/5/4
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/5/5
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/5/6
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/5/7
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/5/8
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/5/9
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/5/10
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/5/11
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/5/12
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/5/13
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/5/14
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/5/15
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/5/16
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/6/1
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/6/2
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/6/3
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/6/4
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/6/5
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/6/6
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/6/7
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/6/8
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/6/9
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/6/10
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/6/11
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/6/12
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/6/13
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/6/14
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/6/15
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/6/16
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/7/1
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/7/2
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/7/3
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/7/4
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/7/5
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/7/6
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/7/7
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/7/8
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/7/9
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/7/10
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/7/11
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/7/12
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/7/13
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/7/14
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/7/15
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/7/16
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/8/1
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/8/2
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/8/3
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/8/4
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/8/5
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/8/6
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/8/7
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/8/8
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/8/9
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/8/10
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/8/11
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/8/12
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/8/13
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/8/14
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/8/15
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface HundredGigE1/8/16
+port link-mode route
+mtu 9000
+link-delay up 5
+#
+interface M-GigabitEthernet0/0/0
+ip binding vpn-instance mgt
+ip address {{mgt_ip}} {{mgt_ip_mask}}
+
+#
+ip prefix-list PL_AGG_V4 index 10 permit 10.0.0.0 8
+ip prefix-list PL_AGG_V4 index 20 permit 33.0.0.0 8
+ip prefix-list PL_DEFAULT_V4 index 10 permit 0.0.0.0 0
+ip prefix-list PL_LOOPBACK_V4 index 10 permit {{lo_tob_dcn_summary_ip}} 27 less-equal 32
+ip prefix-list PL_FAKEINTERNET_SUMMARY_V4 index 10 permit 30.130.0.0 16 less-equal 24
+ip prefix-list PL_IGW_VTEP_V4 index 10 permit 101.78.32.0 22 less-equal 32
+ip prefix-list PL_IGW_VTEP_SUMMARY_V4 index 10 permit 101.78.32.0 22 less-equal 29
+ip prefix-list PL_VERGW_VTEP_V4 index 10 permit {{rgw_vtep_summary_v4}} 22 less-equal 32
+ip prefix-list PL_VERGW_VTEP_V4 index 20 permit {{rgw_steering_vtep_summary_v4}} 22 less-equal 32
+ip prefix-list PL_EGW_VTEP_SUMMARY_V4 permit 101.78.40.0 23 less-equal 30
+ip prefix-list PL_VE_GW_VTEP_V4 index 10 permit 103.238.22.0 27 less-equal 32
+ip prefix-list PL_VE_GW_VTEP_V4 index 20 permit 103.238.22.32 27 less-equal 32
+ip prefix-list PL_VE_GW_VTEP_V4 index 30 permit 103.238.22.64 27 less-equal 32
+#
+ipv6 prefix-list PL_AGG_V6 index 10 permit FDBD:: 16
+ipv6 prefix-list PL_DEFAULT_V6 index 10 permit :: 0
+ipv6 prefix-list PL_LOOPBACK_V6 index 10 permit {{lo_tob_dcn_summary_ip6}} 64 less-equal 128
+ipv6 prefix-list PL_FAKEINTERNET_SUMMARY_V6 index 10 permit 2406:D440:FE00:: 40 less-equal 56
+#
+ip community-list basic CL_LOCAL_VPN_STEERING permit 65520:15
+ip community-list basic CL_IGW_VTEP permit 65520:13
+ip community-list basic CL_IGW_VTEP permit 65520:11001
+ip community-list basic CL_VERGW_VTEP permit 65535:1119
+ip community-list basic CL_INBAND permit 65535:100
+#
+#
+route-policy FROM_EDGEIGW_V4 permit node 10
+if-match community name CL_INBAND
+if-match ip address prefix-list PL_LOOPBACK_V4
+apply as-path {{self_asn}} replace
+apply origin igp
+#
+route-policy FROM_EDGEIGW_V4 permit node 20
+if-match community name CL_LOCAL_VPN_STEERING
+if-match ip address prefix-list PL_FAKEINTERNET_SUMMARY_V4
+apply as-path {{self_asn}} replace
+apply origin igp
+#
+route-policy FROM_EDGEIGW_V4 permit node 30
+if-match community name CL_P4PE_VTEP
+if-match ip address prefix-list PL_IGW_VTEP_V4
+apply as-path {{self_asn}} replace
+apply origin igp
+#
+route-policy FROM_EDGEIGW_V4 deny node 1000
+#
+route-policy FROM_EDGEIGW_V6 permit node 10
+if-match community name CL_INBAND
+if-match ipv6 address prefix-list PL_LOOPBACK_V6
+apply as-path {{self_asn}} replace
+apply origin igp
+#
+route-policy FROM_EDGEIGW_V6 permit node 20
+if-match community name CL_LOCAL_VPN_STEERING
+if-match ipv6 address prefix-list PL_FAKEINTERNET_SUMMARY_V6
+apply as-path {{self_asn}} replace
+apply origin igp
+#
+route-policy FROM_EDGEIGW_V6 deny node 1000
+#
+route-policy FROM_EDGEPE_STEERING_V4 permit node 10
+#
+route-policy FROM_EDGEPE_STEERING_V4 deny node 1000
+#
+route-policy FROM_EDGEPE_STEERING_V6 permit node 10
+#
+route-policy FROM_EDGEPE_STEERING_V6 deny node 1000
+#
+route-policy FROM_EDGEPE_TOB_DCN_V4 permit node 10
+#
+route-policy FROM_EDGEPE_TOB_DCN_V4 deny node 1000
+#
+route-policy FROM_EDGEPE_TOB_DCN_V6 permit node 10
+#
+route-policy FROM_EDGEPE_TOB_DCN_V6 deny node 1000
+#
+route-policy FROM_EDGEPE_V4 permit node 10
+#
+route-policy FROM_EDGEPE_V4 deny node 1000
+#
+route-policy FROM_EDGEPE_V6 permit node 10
+#
+route-policy FROM_EDGEPE_V6 deny node 1000
+#
+route-policy FROM_EDGEXSW_V4 permit node 10
+#
+route-policy FROM_EDGEXSW_V4 deny node 1000
+#
+route-policy FROM_EDGEXSW_V6 permit node 10
+#
+route-policy FROM_EDGEXSW_V6 deny node 1000
+#
+route-policy FROM_VERGW_V4 permit node 10
+if-match community name CL_INBAND
+if-match ip address prefix-list PL_LOOPBACK_V4
+apply as-path {{self_asn}} replace
+apply origin igp
+#
+route-policy FROM_VERGW_V4 permit node 20
+if-match community name CL_VERGW_VTEP
+if-match ip address prefix-list PL_VERGW_VTEP_V4
+apply as-path {{self_asn}} replace
+apply origin igp
+#
+route-policy FROM_VERGW_V4 deny node 1000
+#
+route-policy FROM_VERGW_V6 permit node 10
+if-match community name CL_INBAND
+if-match ipv6 address prefix-list PL_LOOPBACK_V6
+apply as-path {{self_asn}} replace
+apply origin igp
+#
+route-policy FROM_VERGW_V6 deny node 1000
+#
+route-policy RP_CV_LO_V4 permit node 10
+apply community {{tob_region_community}} {{tob_az_community}} 65535:100
+apply origin igp
+#
+route-policy RP_CV_LO_V6 permit node 10
+apply community {{tob_region_community}} {{tob_az_community}} 65535:100
+apply origin igp
+#
+route-policy TO_EDGEIGW_V4 permit node 10
+if-match ip address prefix-list PL_DEFAULT_V4
+#
+route-policy TO_EDGEIGW_V4 permit node 20
+if-match ip address prefix-list PL_AGG_V4
+#
+route-policy TO_EDGEIGW_V4 permit node 30
+if-match ip address prefix-list PL_FAKEINTERNET_SUMMARY_V4
+#
+route-policy TO_EDGEIGW_V4 permit node 40
+if-match ip address prefix-list PL_EGW_VTEP_SUMMARY_V4
+#
+route-policy TO_EDGEIGW_V4 permit node 50
+if-match ip address prefix-list PL_VE_GW_VTEP_V4
+#
+route-policy TO_EDGEIGW_V4 permit node 60
+if-match ip address prefix-list PL_IGW_VTEP_SUMMARY_V4
+#
+route-policy TO_EDGEIGW_V4 permit node 70
+if-match community name CL_IGW_VTEP
+#
+route-policy TO_EDGEIGW_V4 deny node 1000
+#
+route-policy TO_EDGEIGW_V6 permit node 10
+if-match ipv6 address prefix-list PL_DEFAULT_V6
+#
+route-policy TO_EDGEIGW_V6 permit node 20
+if-match ipv6 address prefix-list PL_AGG_V6
+#
+route-policy TO_EDGEIGW_V6 permit node 30
+if-match ipv6 address prefix-list PL_FAKEINTERNET_SUMMARY_V6
+#
+route-policy TO_EDGEIGW_V6 permit node 40
+if-match community name CL_IGW_VTEP
+#
+route-policy TO_EDGEIGW_V6 deny node 1000
+#
+route-policy TO_EDGEPE_STEERING_V4 permit node 10
+#
+route-policy TO_EDGEPE_STEERING_V4 deny node 1000
+#
+route-policy TO_EDGEPE_STEERING_V6 permit node 10
+#
+route-policy TO_EDGEPE_STEERING_V6 deny node 1000
+#
+route-policy TO_EDGEPE_TOB_DCN_V4 permit node 10
+#
+route-policy TO_EDGEPE_TOB_DCN_V4 deny node 1000
+#
+route-policy TO_EDGEPE_TOB_DCN_V6 permit node 10
+#
+route-policy TO_EDGEPE_TOB_DCN_V6 deny node 1000
+#
+route-policy TO_EDGEPE_V4 permit node 10
+#
+route-policy TO_EDGEPE_V4 deny node 1000
+#
+route-policy TO_EDGEPE_V6 permit node 10
+#
+route-policy TO_EDGEPE_V6 deny node 1000
+#
+route-policy TO_EDGEXSW_V4 permit node 10
+#
+route-policy TO_EDGEXSW_V4 deny node 1000
+#
+route-policy TO_EDGEXSW_V6 permit node 10
+#
+route-policy TO_EDGEXSW_V6 deny node 1000
+#
+route-policy TO_VERGW_V4 permit node 10
+if-match ip address prefix-list PL_AGG_V4
+#
+route-policy TO_VERGW_V4 deny node 1000
+#
+route-policy TO_VERGW_V6 permit node 10
+if-match ipv6 address prefix-list PL_AGG_V6
+#
+route-policy TO_VERGW_V6 deny node 1000
+#
+bgp {{self_asn}}
+non-stop-routing
+router-id {{lo_ip}}
+timer keepalive 10 hold 30
+group EDGEIGW_V4 external
+peer EDGEIGW_V4 as-number {{edgeigw_asn}}
+peer EDGEIGW_V4 route-update-interval 0
+group EDGEIGW_V6 external
+peer EDGEIGW_V6 as-number {{edgeigw_asn}}
+peer EDGEIGW_V6 route-update-interval 0
+group VERGW_V4 external
+peer VERGW_V4 as-number {{edgeigw_asn}}
+peer VERGW_V4 route-update-interval 0
+group VERGW_V6 external
+peer VERGW_V6 as-number {{edgeigw_asn}}
+peer VERGW_V6 route-update-interval 0
+group EDGEPE_V4 external
+peer EDGEPE_V4 as-number {{edgepe_asn}}
+peer EDGEPE_V4 route-update-interval 0
+group EDGEPE_V6 external
+peer EDGEPE_V6 as-number {{edgepe_asn}}
+peer EDGEPE_V6 route-update-interval 0
+group EDGEPE_TOB_DCN_V4 external
+peer EDGEPE_TOB_DCN_V4 as-number {{edgepe_asn}}
+peer EDGEPE_TOB_DCN_V4 route-update-interval 0
+group EDGEPE_TOB_DCN_V6 external
+peer EDGEPE_TOB_DCN_V6 as-number {{edgepe_asn}}
+peer EDGEPE_TOB_DCN_V6 route-update-interval 0
+group EDGEPE_STEERING_V4 external
+peer EDGEPE_STEERING_V4 as-number {{edgepe_asn}}
+peer EDGEPE_STEERING_V4 route-update-interval 0
+group EDGEPE_STEERING_V6 external
+peer EDGEPE_STEERING_V6 as-number {{edgepe_asn}}
+peer EDGEPE_STEERING_V6 route-update-interval 0
+group EDGEXSW_V4 internal
+peer EDGEXSW_V4 route-update-interval 0
+group EDGEXSW_V6 internal
+peer EDGEXSW_V6 route-update-interval 0
+#
+address-family ipv4 unicast
+balance 32
+balance as-path-relax ebgp
+preference 20 200 200
+network {{lo_ip}} 255.255.255.255 route-policy RP_CV_LO_V4
+peer EDGEIGW_V4 enable
+y
+peer EDGEIGW_V4 route-policy FROM_EDGEIGW_V4 import
+peer EDGEIGW_V4 route-policy TO_EDGEIGW_V4 export
+peer EDGEIGW_V4 advertise-community
+peer EDGEIGW_V4 advertise-ext-community
+peer EDGEIGW_V4 route-limit 5000
+peer VERGW_V4 enable
+y
+peer VERGW_V4 route-policy FROM_VERGW_V4 import
+peer VERGW_V4 route-policy TO_VERGW_V4 export
+peer VERGW_V4 advertise-community
+peer VERGW_V4 advertise-ext-community
+peer VERGW_V4 route-limit 5000
+peer EDGEPE_V4 enable
+y
+peer EDGEPE_V4 route-policy FROM_EDGEPE_V4 import
+peer EDGEPE_V4 route-policy TO_EDGEPE_V4 export
+peer EDGEPE_V4 advertise-community
+peer EDGEPE_V4 advertise-ext-community
+peer EDGEPE_STEERING_V4 enable
+y
+peer EDGEPE_STEERING_V4 route-policy FROM_EDGEPE_STEERING_V4 import
+peer EDGEPE_STEERING_V4 route-policy TO_EDGEPE_STEERING_V4 export
+peer EDGEPE_STEERING_V4 advertise-community
+peer EDGEPE_STEERING_V4 advertise-ext-community
+peer EDGEPE_TOB_DCN_V4 enable
+y
+peer EDGEPE_TOB_DCN_V4 route-policy FROM_EDGEPE_TOB_DCN_V4 import
+peer EDGEPE_TOB_DCN_V4 route-policy TO_EDGEPE_TOB_DCN_V4 export
+peer EDGEPE_TOB_DCN_V4 advertise-community
+peer EDGEPE_TOB_DCN_V4 advertise-ext-community
+peer EDGEXSW_V4 enable
+y
+peer EDGEXSW_V4 advertise-community
+peer EDGEXSW_V4 advertise-ext-community
+peer EDGEXSW_V4 next-hop-local
+y
+#
+address-family ipv6 unicast
+balance 32
+balance as-path-relax ebgp
+preference 20 200 200
+network {{lo_ip6}} 128 route-policy RP_CV_LO_V6
+peer EDGEIGW_V6 enable
+y
+peer EDGEIGW_V6 route-policy FROM_EDGEIGW_V6 import
+peer EDGEIGW_V6 route-policy TO_EDGEIGW_V6 export
+peer EDGEIGW_V6 advertise-community
+peer EDGEIGW_V6 advertise-ext-community
+peer EDGEIGW_V6 route-limit 5000
+peer VERGW_V6 enable
+y
+peer VERGW_V6 route-policy FROM_VERGW_V6 import
+peer VERGW_V6 route-policy TO_VERGW_V6 export
+peer VERGW_V6 advertise-community
+peer VERGW_V6 advertise-ext-community
+peer VERGW_V6 route-limit 5000
+peer EDGEPE_V6 enable
+y
+peer EDGEPE_V6 route-policy FROM_EDGEPE_V6 import
+peer EDGEPE_V6 route-policy TO_EDGEPE_V6 export
+peer EDGEPE_V6 advertise-community
+peer EDGEPE_V6 advertise-ext-community
+peer EDGEPE_STEERING_V6 enable
+y
+peer EDGEPE_STEERING_V6 route-policy FROM_EDGEPE_STEERING_V6 import
+peer EDGEPE_STEERING_V6 route-policy TO_EDGEPE_STEERING_V6 export
+peer EDGEPE_STEERING_V6 advertise-community
+peer EDGEPE_STEERING_V6 advertise-ext-community
+peer EDGEPE_TOB_DCN_V6 enable
+y
+peer EDGEPE_TOB_DCN_V6 route-policy FROM_EDGEPE_TOB_DCN_V6 import
+peer EDGEPE_TOB_DCN_V6 route-policy TO_EDGEPE_TOB_DCN_V6 export
+peer EDGEPE_TOB_DCN_V6 advertise-community
+peer EDGEPE_TOB_DCN_V6 advertise-ext-community
+peer EDGEXSW_V6 enable
+y
+peer EDGEXSW_V6 advertise-community
+peer EDGEXSW_V6 advertise-ext-community
+peer EDGEXSW_V6 next-hop-local
+y
+#
+scheduler logfile size 16
+#
+line class aux
+user-role network-admin
+#
+line class vty
+user-role network-operator
+#
+line aux 0
+user-role network-admin
+#
+line vty 0 63
+authentication-mode scheme
+user-role network-admin
+user-role network-operator
+protocol inbound ssh
+idle-timeout 30 0
+command authorization
+command accounting
+#
+ip route-static vpn-instance mgt 0.0.0.0 0 {{mgt_gw}}  preference 255
+#
+info-center timestamp loghost iso
+info-center logbuffer size 1024
+info-center loghost source LoopBack0
+info-center loghost 10.8.8.12 facility local5
+#
+snmp-agent
+snmp-agent community read simple immense1
+snmp-agent sys-info version v2c v3
+snmp-agent packet max-size 17940
+snmp-agent packet response dscp 28
+#
+ssh server enable
+ssh user admin service-type all authentication-type any
+ssh user bytedance service-type all authentication-type any
+ssh server acl 2990
+ssh server ipv6 acl ipv6 2990
+scp server enable
+#
+ntp-service enable
+ntp-service unicast-server 10.8.8.12 source LoopBack0
+#
+#
+acl number 2990
+rule 1 permit source 10.20.26.12 0
+rule 2 permit source 10.13.34.196 0
+rule 3 permit source 10.8.29.87 0
+rule 4 permit source 10.129.19.23 0
+rule 5 permit source 10.234.79.31 0
+rule 6 permit source 10.188.20.132 0
+rule 7 permit source 10.188.32.132 0
+rule 8 permit source 10.8.251.34 0
+rule 9 permit source 10.12.214.66 0
+rule 10 permit source 10.22.47.80 0
+rule 11 permit source 10.129.16.229 0
+rule 12 permit source 10.188.20.135 0
+rule 13 permit source 10.246.17.233 0
+rule 14 permit source 10.129.24.137 0
+rule 15 permit source 10.246.17.152 0
+rule 16 permit source 10.153.28.158 0
+rule 17 permit source 10.144.38.142 0
+rule 18 permit source 10.124.186.102 0
+rule 19 permit source 10.98.130.96 0
+rule 20 permit source 10.161.63.95 0
+rule 21 permit source 10.175.91.209 0
+rule 22 permit source 10.250.76.148 0
+rule 23 permit source 10.250.171.209 0
+rule 24 permit source 10.250.176.134 0
+rule 25 permit source 10.207.16.48 0
+rule 26 permit source 10.177.18.72 0
+rule 27 permit source 10.166.51.21 0
+rule 28 permit source 10.166.50.77 0
+rule 29 permit source 10.181.16.74 0
+rule 30 permit source 10.181.17.20 0
+rule 31 permit source 10.165.16.73 0
+rule 32 permit source 10.248.137.144 0
+rule 33 permit source 10.8.79.0 0.0.0.255
+rule 101 permit vpn-instance mgt source 10.20.26.12 0
+rule 102 permit vpn-instance mgt source 10.13.34.196 0
+rule 103 permit vpn-instance mgt source 10.8.29.87 0
+rule 104 permit vpn-instance mgt source 10.129.19.23 0
+rule 105 permit vpn-instance mgt source 10.234.79.31 0
+rule 106 permit vpn-instance mgt source 10.188.20.132 0
+rule 107 permit vpn-instance mgt source 10.188.32.132 0
+rule 108 permit vpn-instance mgt source 10.8.251.34 0
+rule 109 permit vpn-instance mgt source 10.12.214.66 0
+rule 110 permit vpn-instance mgt source 10.22.47.80 0
+rule 111 permit vpn-instance mgt source 10.129.16.229 0
+rule 112 permit vpn-instance mgt source 10.188.20.135 0
+rule 113 permit vpn-instance mgt source 10.246.17.233 0
+rule 114 permit vpn-instance mgt source 10.129.24.137 0
+rule 115 permit vpn-instance mgt source 10.246.17.152 0
+rule 116 permit vpn-instance mgt source 10.153.28.158 0
+rule 117 permit vpn-instance mgt source 10.144.38.142 0
+rule 118 permit vpn-instance mgt source 10.124.186.102 0
+rule 119 permit vpn-instance mgt source 10.98.130.96 0
+rule 120 permit vpn-instance mgt source 10.161.63.95 0
+rule 121 permit vpn-instance mgt source 10.175.91.209 0
+rule 122 permit vpn-instance mgt source 10.250.76.148 0
+rule 123 permit vpn-instance mgt source 10.250.171.209 0
+rule 124 permit vpn-instance mgt source 10.250.176.134 0
+rule 125 permit vpn-instance mgt source 10.207.16.48 0
+rule 126 permit vpn-instance mgt source 10.177.18.72 0
+rule 127 permit vpn-instance mgt source 10.166.51.21 0
+rule 128 permit vpn-instance mgt source 10.166.50.77 0
+rule 129 permit vpn-instance mgt source 10.181.16.74 0
+rule 130 permit vpn-instance mgt source 10.181.17.20 0
+rule 131 permit vpn-instance mgt source 10.165.16.73 0
+rule 132 permit vpn-instance mgt source 10.248.137.144 0
+rule 133 permit vpn-instance mgt source 10.8.79.0 0.0.0.255
+rule 210 permit vpn-instance mgt source 36.110.131.0 0.0.0.255
+rule 210 comment LF-CT
+rule 220 permit vpn-instance mgt source 221.194.170.128 0.0.0.127
+rule 220 comment LF-CU
+rule 230 permit vpn-instance mgt source 221.194.187.128 0.0.0.127
+rule 230 comment LF-CU
+rule 240 permit vpn-instance mgt source 111.62.106.0 0.0.0.255
+rule 240 comment LF-CM
+rule 250 permit vpn-instance mgt source 122.14.229.0 0.0.0.255
+rule 250 comment seal
+rule 260 permit vpn-instance mgt source 106.38.226.0 0.0.0.255
+rule 260 comment HL-CT
+rule 270 permit vpn-instance mgt source 116.132.239.0 0.0.0.255
+rule 270 comment HL-CU
+rule 280 permit vpn-instance mgt source 111.63.61.128 0.0.0.127
+rule 280 comment HL-CM
+rule 290 permit vpn-instance mgt source 111.63.211.128 0.0.0.127
+rule 290 comment HL-CM
+rule 300 permit vpn-instance mgt source 123.103.48.12 0.0.0.3
+rule 300 comment seal
+rule 310 permit vpn-instance mgt source 123.103.49.12 0.0.0.3
+rule 310 comment seal
+rule 320 permit vpn-instance mgt source 45.248.239.0 0.0.0.255
+rule 320 comment QD-BGP
+rule 330 permit vpn-instance mgt source 121.30.179.0 0.0.0.255
+rule 330 comment LQ-CU
+rule 340 permit vpn-instance mgt source 183.201.126.0 0.0.0.255
+rule 340 comment LQ-CM
+rule 350 permit vpn-instance mgt source 221.194.189.0 0.0.0.31
+rule 350 comment WJ-CU
+rule 360 permit vpn-instance mgt source 123.58.10.0 0.0.0.255
+rule 360 comment LF-edgejump
+rule 370 permit vpn-instance mgt source 220.243.131.0 0.0.0.255
+rule 370 comment HL-edgejump_and_seal
+rule 1210 permit source 36.110.131.0 0.0.0.255
+rule 1210 comment LF-CT
+rule 1220 permit source 221.194.170.128 0.0.0.127
+rule 1220 comment LF-CU
+rule 1230 permit source 221.194.187.128 0.0.0.127
+rule 1230 comment LF-CU
+rule 1240 permit source 111.62.106.0 0.0.0.255
+rule 1240 comment LF-CM
+rule 1250 permit source 122.14.229.0 0.0.0.255
+rule 1250 comment seal
+rule 1260 permit source 106.38.226.0 0.0.0.255
+rule 1260 comment HL-CT
+rule 1270 permit source 116.132.239.0 0.0.0.255
+rule 1270 comment HL-CU
+rule 1280 permit source 111.63.61.128 0.0.0.127
+rule 1280 comment HL-CM
+rule 1290 permit source 111.63.211.128 0.0.0.127
+rule 1290 comment HL-CM
+rule 1300 permit source 123.103.48.12 0.0.0.3
+rule 1300 comment seal
+rule 1310 permit source 123.103.49.12 0.0.0.3
+rule 1310 comment seal
+rule 1320 permit source 45.248.239.0 0.0.0.255
+rule 1320 comment QD-BGP
+rule 1330 permit source 121.30.179.0 0.0.0.255
+rule 1330 comment LQ-CU
+rule 1340 permit source 183.201.126.0 0.0.0.255
+rule 1340 comment LQ-CM
+rule 1350 permit source 221.194.189.0 0.0.0.31
+rule 1350 comment WJ-CU
+rule 1360 permit source 123.58.10.0 0.0.0.255
+rule 1360 comment LF-edgejump
+rule 1370 permit source 220.243.131.0 0.0.0.255
+rule 1370 comment HL-edgejump_and_seal
+#
+acl ipv6 number 2990
+rule 1 permit source FDBD:DC02:9:51::12/128
+rule 2 permit source FDBD:DC01:14:86::196/128
+rule 3 permit source FDBD:DC01:13:64::87/128
+rule 4 permit source FDBD:DC03:2:13::23/128
+rule 5 permit source FDBD:DC51:4000:253::31/128
+rule 6 permit source FDBD:DC61:2:29::132/128
+rule 7 permit source FDBD:DC61:2:122::132/128
+rule 8 permit source FDBD:DC01:103:292::66/128
+rule 9 permit source FDBD:DC02:7:136::80/128
+rule 10 permit source FDBD:DC03:2:4::229/128
+rule 11 permit source FDBD:DC61:2:29::135/128
+rule 12 permit source FDBD:DC51:4002:8::233/128
+rule 13 permit source FDBD:DC03:2:35::137/128
+rule 14 permit source FDBD:DC51:4002:7::152/128
+rule 15 permit source FDBD:DC01:2:61::158/128
+rule 16 permit source FDBD:DC02:13:91::142/128
+rule 17 permit source FDBD:DC05:1:190::95/128
+rule 18 permit source FDBD:DC03:15:304::209/128
+rule 19 permit source FDBD:DC01:24:243::148/128
+rule 20 permit source FDBD:DC01:24:624::209/128
+rule 21 permit source FDBD:DC01:24:643::134/128
+rule 22 permit source FDBD:DC41:2:1::48/128
+rule 23 permit source FDBD:DC42:2:10::72/128
+rule 24 permit source FDBD:DC42:3:141::21/128
+rule 25 permit source FDBD:DC42:3:138::77/128
+rule 26 permit source FDBD:DC43:1:2::74/128
+rule 27 permit source FDBD:DC43:1:5::20/128
+rule 28 permit source FDBD:DC43:4:2::73/128
+rule 29 permit source FDBD:DC03:FF:1:1:248:137:144/128
+rule 30 permit source FDBD:DC00::10:8:79:0/112
+rule 101 permit vpn-instance mgt source FDBD:DC02:9:51::12/128
+rule 102 permit vpn-instance mgt source FDBD:DC01:14:86::196/128
+rule 103 permit vpn-instance mgt source FDBD:DC01:13:64::87/128
+rule 104 permit vpn-instance mgt source FDBD:DC03:2:13::23/128
+rule 105 permit vpn-instance mgt source FDBD:DC51:4000:253::31/128
+rule 106 permit vpn-instance mgt source FDBD:DC61:2:29::132/128
+rule 107 permit vpn-instance mgt source FDBD:DC61:2:122::132/128
+rule 108 permit vpn-instance mgt source FDBD:DC01:103:292::66/128
+rule 109 permit vpn-instance mgt source FDBD:DC02:7:136::80/128
+rule 110 permit vpn-instance mgt source FDBD:DC03:2:4::229/128
+rule 111 permit vpn-instance mgt source FDBD:DC61:2:29::135/128
+rule 112 permit vpn-instance mgt source FDBD:DC51:4002:8::233/128
+rule 113 permit vpn-instance mgt source FDBD:DC03:2:35::137/128
+rule 114 permit vpn-instance mgt source FDBD:DC51:4002:7::152/128
+rule 115 permit vpn-instance mgt source FDBD:DC01:2:61::158/128
+rule 116 permit vpn-instance mgt source FDBD:DC02:13:91::142/128
+rule 117 permit vpn-instance mgt source FDBD:DC05:1:190::95/128
+rule 118 permit vpn-instance mgt source FDBD:DC03:15:304::209/128
+rule 119 permit vpn-instance mgt source FDBD:DC01:24:243::148/128
+rule 120 permit vpn-instance mgt source FDBD:DC01:24:624::209/128
+rule 121 permit vpn-instance mgt source FDBD:DC01:24:643::134/128
+rule 122 permit vpn-instance mgt source FDBD:DC41:2:1::48/128
+rule 123 permit vpn-instance mgt source FDBD:DC42:2:10::72/128
+rule 124 permit vpn-instance mgt source FDBD:DC42:3:141::21/128
+rule 125 permit vpn-instance mgt source FDBD:DC42:3:138::77/128
+rule 126 permit vpn-instance mgt source FDBD:DC43:1:2::74/128
+rule 127 permit vpn-instance mgt source FDBD:DC43:1:5::20/128
+rule 128 permit vpn-instance mgt source FDBD:DC43:4:2::73/128
+rule 129 permit vpn-instance mgt source FDBD:DC03:FF:1:1:248:137:144/128
+rule 130 permit vpn-instance mgt source FDBD:DC00::10:8:79:0/112
+#
+hwtacacs nas-ip {{lo_ip}}
+hwtacacs nas-ip {{mgt_ip}} vpn-instance mgt
+#
+hwtacacs scheme bytedance
+primary authentication 10.8.8.12 4949 key cipher $c$3$Gw2m2C4fo893J62VyN+yj07aiAve8DVWg0uFUgCpKw==
+primary authorization 10.8.8.12 4949 key cipher $c$3$mUnVmbrU4zAoB193Epw6VLKKzeYIBasx1oNqDAir2g==
+primary accounting 10.8.8.12 4949 key cipher $c$3$SdQqn2oAU2utC8iuFFK9JW2VMPAduP46AZ4Y5lKpeA==
+secondary authentication 101.126.58.2 8900 vpn-instance mgt key cipher $c$3$deDGMbDOH/kQwvsnV/PhcJuu/uZgR/8zqMfEz/807g==
+secondary authorization 101.126.58.2 8900 vpn-instance mgt key cipher $c$3$DZJOqgOqdTdGbZEGvCPUbrYkhEnhveHsaJevt9Q5jw==
+secondary accounting 101.126.58.2 8900 vpn-instance mgt key cipher $c$3$9rFJCYLNps31Dt8K3Qsgg5DBauh1PnSppKiMBLkw4A==
+user-name-format without-domain
+#
+radius scheme system
+user-name-format without-domain
+#
+domain bytedance
+authentication default hwtacacs-scheme bytedance local
+authorization default hwtacacs-scheme bytedance local
+accounting default hwtacacs-scheme bytedance local
+#
+domain default_admin
+#
+domain system
+#
+domain default enable bytedance
+#
+role name level-0
+description Predefined level-0 role
+#
+role name level-1
+description Predefined level-1 role
+#
+role name level-2
+description Predefined level-2 role
+#
+role name level-3
+description Predefined level-3 role
+#
+role name level-4
+description Predefined level-4 role
+#
+role name level-5
+description Predefined level-5 role
+#
+role name level-6
+description Predefined level-6 role
+#
+role name level-7
+description Predefined level-7 role
+#
+role name level-8
+description Predefined level-8 role
+#
+role name level-9
+description Predefined level-9 role
+#
+role name level-10
+description Predefined level-10 role
+#
+role name level-11
+description Predefined level-11 role
+#
+role name level-12
+description Predefined level-12 role
+#
+role name level-13
+description Predefined level-13 role
+#
+role name level-14
+description Predefined level-14 role
+#
+user-group system
+#
+local-user admin class manage
+password hash $h$6$E0CGM6mWusGxnWyV$vlHNGegvxIkIKHQbu1XecJXWCQn7Vk63rZtut9OrRHbk/2tcYjjb//7rZkHaIKYa6FHBo+VuW4G1TqZ36wJkUA==
+service-type ssh terminal
+authorization-attribute user-role network-admin
+authorization-attribute user-role network-operator
+#
+local-user bytedance class manage
+password hash $h$6$ovnsYXNAETfM+zgy$ibfOk0JF8lonofutASJfIzwXtoNQ6+4B2xSJaF8lqc2ps2Cj53Z9Kl4hCC3VF3804hmj1NfEYUHpovc2+DVMSA==
+service-type ssh terminal
+authorization-attribute user-role level-15
+authorization-attribute user-role network-admin
+authorization-attribute user-role network-operator
+#
+security-enhanced level 1
+#
+grpc enable
+telemetry
+sensor-group 1
+sensor path buffermonitor/bufferusages
+sensor path buffermonitor/commbufferusages
+sensor path buffermonitor/ecnandwredstatistics
+sensor path buffermonitor/egressdrops
+sensor path buffermonitor/ingressdrops
+sensor path buffermonitor/pfcstatistics
+sensor path device/cpus
+sensor path ifmgr/statistics
+sensor path ipfw/ipstatistic
+destination-group 1
+ipv4-address 10.8.8.30 port 12345
+subscription 1
+sensor-group 1 sample-interval 5
+source-address interface LoopBack0
+destination-group 1
+#
+#接口配置
+{% for link in link -%}
+{%- if 'p2p' in link.type -%}
+interface {{link.local_port|replace('100GE', 'HundredGigE')}}
+description N={{link.peer_switch}}:I={{link.peer_port|replace('Route-Aggregation', 'RAGG')}}
+ip address {{link.local_ipv4}} 255.255.255.254
+ipv6 address {{link.local_ipv6}}/127
+#
+{% endif -%}
+
+{% if 'port-channel' in link.type %}
+interface {{link.local_port|replace('100GE', 'HundredGigE')}}
+description N={{link.peer_switch}}:I={{link.peer_port}}
+#
+{% endif %}
+
+{%- endfor %}
+
+{%- set datacenter = datacenter -%}
+{%- set self_asn = self_asn -%}
+{%- set upper_datacenter = upper_datacenter -%}
+
+#bgp配置
+bgp {{ self_asn }}
+{% for link in link -%}
+{% if 'GOBAL' in link.peer_vpn and 'p2p' in link.type -%}
+{% if 'EDGE-PE' in link.peer_switch or  'CDN-BBONE' in link.peer_switch %}
+peer {{ link.peer_ipv4 }} group EDGEPE_V4
+peer {{ link.peer_ipv6 }} group EDGEPE_V6
+{% endif -%}
+{% if 'EDGE-XSW' in link.peer_switch %}
+peer {{ link.peer_ipv4 }} group EDGEXSW_V4
+peer {{ link.peer_ipv6 }} group EDGEXSW_V6
+{% endif -%}
+{% if 'EDGEIGW' in link.peer_switch %}
+peer {{ link.peer_ipv4 }} group EDGEIGW_V4
+peer {{ link.peer_ipv6 }} group EDGEIGW_V6
+{% endif -%}
+{% if 'VERGW' in link.peer_switch %}
+peer {{ link.peer_ipv4 }} group VERGW_V4
+peer {{ link.peer_ipv6 }} group VERGW_V6
+{% endif -%}
+{% elif 'LOCAL_VPN_STEERING' in link.peer_vpn and 'p2p' in link.type -%}
+{% if 'EDGE-PE' in link.peer_switch or  'CDN-BBONE' in link.peer_switch %}
+peer {{ link.peer_ipv4 }} group EDGEPE_STEERING_V4
+peer {{ link.peer_ipv6 }} group EDGEPE_STEERING_V6
+{% endif -%}
+{% elif 'TOB-DCN' in link.peer_vpn and 'p2p' in link.type -%}
+{% if 'EDGE-PE' in link.peer_switch or  'CDN-BBONE' in link.peer_switch %}
+peer {{ link.peer_ipv4 }} group EDGEPE_TOB_DCN_V4
+peer {{ link.peer_ipv6 }} group EDGEPE_TOB_DCN_V6
+{% endif -%}
+{%- endif %}
+{%- endfor -%}
+#
+#
+return

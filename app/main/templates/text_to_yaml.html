@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}文本转 YAML{% endblock %}
+
+{% block content %}
+<div class="banner">文本转 YAML</div>
+
+<h1 class="page-title">Excel 数据转 YAML</h1>
+<p class="page-subtitle">
+    从 Excel 复制多行数据，列之间用空白字符分隔。第一行作为表头（key），相同第一列值的行聚合为一个列表，最终格式为字典。
+</p>
+
+<div class="column-full-width" spellcheck="false">
+    <div class="header-row">
+        <label for="t2y-input">输入（按行/空白分列）</label>
+        <button id="t2y-convert-btn" type="button">转换</button>
+    </div>
+    <textarea id="t2y-input" placeholder="示例1：
+device ip vlan
+siteA 10.0.0.1 10
+siteB 10.0.0.2 20
+siteA 10.0.0.3 30
+
+转换结果1：
+siteA:
+  - device: siteA
+    ip: 10.0.0.1
+    vlan: 10
+  - device: siteA
+    ip: 10.0.0.3
+    vlan: 30
+siteB:
+  - device: siteB
+    ip: 10.0.0.2
+    vlan: 20"></textarea>
+</div>
+
+<div class="full-width-textarea" spellcheck="false">
+    <label for="t2y-output">输出 YAML</label>
+    <textarea id="t2y-output" readonly placeholder="转换结果会出现在这里..."></textarea>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+<script src="{{ url_for('static', filename='js/text_to_yaml.js') }}"></script>
+{% endblock %}
+

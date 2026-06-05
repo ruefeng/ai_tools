@@ -1,0 +1,63 @@
+{#前端封装yaml数据格式，包装在devices下,格式如下
+devices:
+  BJWJ_2F_102-J-12-48.UCORE-0-0:
+    - local_port: Route-Aggregation201
+      local_vpn: NONE
+      local_lagid: none
+      local_ipv4: 9.110.127.84/31
+      local_ipv6: FDBD:DC00:46::96E:7F54/127
+      peer_switch: BJTZKC_6_M118-B-05-30.CDN-BBONE-PE-A
+      peer_port: Route-Aggregation100
+      peer_vpn: NONE
+      peer_ipv4: 9.110.127.85/31
+      peer_ipv6: fdbd:dc00:46::96e:7f55/127
+      peer_lagid: none
+      type: bundle
+#}
+{% for device_name, device_links in devices.items() %}
+{{device_name}}
+{% for link in device_links %}
+{% set ip4_parts = link.local_ipv4.split('/') %}
+{% set ip4_addr = ip4_parts[0] %}
+{% if link.type == 'bundle' %}
+interface {{ link.local_port }}
+description N={{ link.peer_switch }}:I={{ link.peer_port|replace('Route-Aggregation', 'RAGG') }}
+ip address {{ ip4_addr }} 255.255.255.254
+ipv6 address {{ link.local_ipv6 }}
+mtu 9000
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+link-aggregation mode dynamic
+undo shutdown
+#
+{% elif link.type == 'bundle_sub' %}
+interface {{link.local_port}}
+description N={{link.peer_switch}}:I={{link.peer_port|replace('Route-Aggregation', 'RAGG')}}
+ip binding vpn-instance {{link.local_vpn}}
+ip address {{ip4_addr}} 255.255.255.254
+ipv6 address {{link.local_ipv6}}
+mtu 9000
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+undo shutdown
+#
+{% elif link.type == 'member' %}
+interface {{link.local_port|replace('100GE', 'HGE')}}
+port link-mode route
+description N={{link.peer_switch}}:I={{link.peer_port}}
+link-delay up 5
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+lacp period short
+port link-aggregation group {{link.local_lagid}}
+{% if 'UCORE' in device_name %}
+link-delay down 2
+qos apply qmprofile QUEUE_ALGORITHM_BYTEDANCE
+{% else %}
+{% endif %}
+undo shutdown
+#
+{% else %}
+{% endif %}
+{% endfor %}
+{% endfor %}

@@ -1,0 +1,108 @@
+sysname {{hostname}}
+#
+clock timezone beijing add 08:00:00
+#
+vlan 1
+#
+ip vpn-instance mgt
+#
+address-family ipv4
+#
+address-family ipv6
+#
+interface M-GigabitEthernet0/0/1
+ip binding vpn-instance mgt
+ip address {{mgt_ip}} {{mgt_ip_mask}}
+#
+scheduler logfile size 16
+#
+line class aux
+user-role network-admin
+#
+line class vty
+user-role network-operator
+#
+line aux 0 1
+user-role network-admin
+#
+line vty 0 63
+authentication-mode scheme
+user-role network-admin
+user-role network-operator
+protocol inbound ssh
+idle-timeout 30 0
+command authorization
+command accounting
+#
+line vty 64 127
+user-role network-operator
+#
+ip route-static vpn-instance mgt 0.0.0.0 0 M-GigabitEthernet0/0/1 {{mgt_gw}}
+#
+ssh server enable
+ssh user admin service-type all authentication-type password
+ssh user bytedance service-type all authentication-type password
+ssh server dscp 60
+scp server enable
+#
+role name level-0
+description Predefined level-0 role
+#
+role name level-1
+description Predefined level-1 role
+#
+role name level-2
+description Predefined level-2 role
+#
+role name level-3
+description Predefined level-3 role
+#
+role name level-4
+description Predefined level-4 role
+#
+role name level-5
+description Predefined level-5 role
+#
+role name level-6
+description Predefined level-6 role
+#
+role name level-7
+description Predefined level-7 role
+#
+role name level-8
+description Predefined level-8 role
+#
+role name level-9
+description Predefined level-9 role
+#
+role name level-10
+description Predefined level-10 role
+#
+role name level-11
+description Predefined level-11 role
+#
+role name level-12
+description Predefined level-12 role
+#
+role name level-13
+description Predefined level-13 role
+#
+role name level-14
+description Predefined level-14 role
+#
+user-group system
+#
+local-user admin class manage
+password hash $h$6$E0CGM6mWusGxnWyV$vlHNGegvxIkIKHQbu1XecJXWCQn7Vk63rZtut9OrRHbk/2tcYjjb//7rZkHaIKYa6FHBo+VuW4G1TqZ36wJkUA==
+service-type ssh terminal
+authorization-attribute user-role network-admin
+authorization-attribute user-role network-operator
+#
+local-user bytedance class manage
+password hash $h$6$ovnsYXNAETfM+zgy$ibfOk0JF8lonofutASJfIzwXtoNQ6+4B2xSJaF8lqc2ps2Cj53Z9Kl4hCC3VF3804hmj1NfEYUHpovc2+DVMSA==
+service-type ssh terminal
+authorization-attribute user-role level-15
+authorization-attribute user-role network-admin
+authorization-attribute user-role network-operator
+#
+return

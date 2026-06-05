@@ -1,0 +1,1480 @@
+sysname {{hostname}}
+#
+clock timezone beijing add 08:00:00
+#
+ip vpn-instance LOCAL_VPN_STEERING
+route-distinguisher 64543:1000
+#
+address-family ipv4
+route-distinguisher 64543:1000
+tnl-policy SR-LSP-ECMP
+#
+address-family ipv6
+route-distinguisher 64543:1000
+tnl-policy SR-LSP-ECMP
+#
+address-family ipv4 flowspec
+route-distinguisher 64543:1000
+#
+address-family ipv6 flowspec
+route-distinguisher 64543:1000
+#
+ip vpn-instance TI-VPN10-Intranet
+route-distinguisher 64543:10
+vpn-target 64543:10 import-extcommunity
+vpn-target 64543:10 export-extcommunity
+#
+address-family ipv4
+route-distinguisher 64543:10
+tnl-policy SR-LSP-ECMP
+#
+address-family ipv6
+route-distinguisher 64543:10
+tnl-policy SR-LSP-ECMP
+#
+address-family ipv4 flowspec
+route-distinguisher 64543:10
+#
+address-family ipv6 flowspec
+route-distinguisher 64543:10
+#
+ip vpn-instance TOB-DCN
+route-distinguisher 64543:1002
+vpn-target 64543:1002 import-extcommunity
+vpn-target 64543:1002 export-extcommunity
+#
+address-family ipv4
+route-distinguisher 64543:1002
+tnl-policy SR-LSP-ECMP
+#
+address-family ipv6
+route-distinguisher 64543:1002
+tnl-policy SR-LSP-ECMP
+#
+address-family ipv4 flowspec
+route-distinguisher 64543:1002
+#
+address-family ipv6 flowspec
+route-distinguisher 64543:1002
+#
+ip vpn-instance mgt
+#
+address-family ipv4
+#
+address-family ipv6
+#
+ip unreachables enable
+ip ttl-expires enable
+#
+sflow source ip {{lo_ip}}
+sflow collector 1 ip 10.8.8.30 port 9000 description "CLI Collector"
+#
+lldp global enable
+#
+password-recovery enable
+#
+vlan 1
+#
+tunnel-policy SR-LSP-ECMP
+select-seq sr-lsp load-balance-number 32
+#
+stp port-log instance 0 to 4094
+stp port-log vlan 1 to 4094
+stp global enable
+#
+#聚合口RAGG100、RAGG200、RAGG201包含子接口
+interface Route-Aggregation100
+description TO_EDGE-PE
+mtu 9000
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+link-aggregation mode dynamic
+
+interface Route-Aggregation100.10
+ip binding vpn-instance LOCAL_VPN_STEERING
+description TO_EDGE-PE_LOCAL_VPN_STEERING
+mtu 9000
+#
+interface Route-Aggregation100.20
+ip binding vpn-instance TOB-DCN
+description TO_EDGE-PE_TOB-DCN
+mtu 9000
+#
+interface Route-Aggregation100.30
+ip binding vpn-instance TI-VPN10-Intranet
+description TO_EDGE-PE_TI-VPN10-Intranet
+mtu 9000
+#
+interface Route-Aggregation200
+description reservered_TO_XSW-1
+mtu 9000
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+link-aggregation mode dynamic
+#
+interface Route-Aggregation200.10
+ip binding vpn-instance LOCAL_VPN_STEERING
+description reservered_TO_XSW-1_STEERING
+mtu 9000
+#
+interface Route-Aggregation200.20
+ip binding vpn-instance TOB-DCN
+description reservered_TO_XSW-1_TOB-DCN
+mtu 9000
+#
+interface Route-Aggregation201
+description reservered_TO_XSW-2
+mtu 9000
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+link-aggregation mode dynamic
+#
+interface Route-Aggregation201.10
+ip binding vpn-instance LOCAL_VPN_STEERING
+description reservered_TO_XSW-2_STEERING
+mtu 9000
+#
+interface Route-Aggregation201.20
+ip binding vpn-instance TOB-DCN
+description reservered_TO_XSW-2_TOB-DCN
+mtu 9000
+#
+#Loopback0
+interface LoopBack0
+ip address {{lo_ip}} 255.255.255.255
+ipv6 address {{lo_ip6}}/128
+
+interface NULL0
+
+#管理口挂载策略
+interface M-GigabitEthernet0/0/1
+ip binding vpn-instance mgt
+ip address {{mgt_ip}} {{mgt_ip_mask}}
+
+
+#和IN-CORE互联
+interface range HundredGigE 2/0/29 to HundredGigE 2/0/32
+ip binding vpn-instance TI-VPN10-Intranet
+description reservered_TO_IN-CORE
+
+interface range HundredGigE 3/0/29 to HundredGigE 3/0/32
+ip binding vpn-instance TI-VPN10-Intranet
+description reservered_TO_IN-CORE
+
+#上行UCORE口, link-delay down 2
+interface range HundredGigE 2/0/1 to HundredGigE 2/0/2
+description reservered_TO_UCORE
+port link-mode route
+link-delay down 2
+mtu 9000
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+
+interface range HundredGigE 3/0/1 to HundredGigE 3/0/2
+description reservered_TO_UCORE
+port link-mode route
+link-delay down 2
+mtu 9000
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+
+#默认配置link-delay up 5 和MTU9000
+interface range HundredGigE 2/0/3 to HundredGigE 2/0/48
+port link-mode route
+link-delay up 5
+mtu 9000
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+
+interface range HundredGigE 3/0/3 to HundredGigE 3/0/48
+port link-mode route
+link-delay up 5
+mtu 9000
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+
+
+#和L2-EX-CORE 导流互联增加acl策略
+interface HundredGigE 2/0/25.500
+ip binding vpn-instance LOCAL_VPN_STEERING
+description reservered_TO_L2_STERRING
+mtu 9000
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+packet-filter 3001 inbound
+
+interface HundredGigE 2/0/26.500
+ip binding vpn-instance LOCAL_VPN_STEERING
+description reservered_TO_L2_STERRING
+mtu 9000
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+packet-filter 3001 inbound
+
+interface HundredGigE 2/0/27.500
+ip binding vpn-instance LOCAL_VPN_STEERING
+description reservered_TO_L2_STERRING
+mtu 9000
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+packet-filter 3001 inbound
+
+interface HundredGigE 2/0/28.500
+ip binding vpn-instance LOCAL_VPN_STEERING
+description reservered_TO_L2_STERRING
+mtu 9000
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+packet-filter 3001 inbound
+
+interface HundredGigE 3/0/25.500
+ip binding vpn-instance LOCAL_VPN_STEERING
+description reservered_TO_L2_STERRING
+mtu 9000
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+packet-filter 3001 inbound
+
+interface HundredGigE 3/0/26.500
+ip binding vpn-instance LOCAL_VPN_STEERING
+description reservered_TO_L2_STERRING
+mtu 9000
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+packet-filter 3001 inbound
+
+interface HundredGigE 3/0/27.500
+ip binding vpn-instance LOCAL_VPN_STEERING
+description reservered_TO_L2_STERRING
+mtu 9000
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+packet-filter 3001 inbound
+
+interface HundredGigE 3/0/28.500
+ip binding vpn-instance LOCAL_VPN_STEERING
+description reservered_TO_L2_STERRING
+mtu 9000
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+packet-filter 3001 inbound
+
+#到L2-EX-CORE gobal接口描述
+interface range HundredGigE 2/0/25 to HundredGigE 2/0/28
+description reservered_TO_L2_EX-CORE
+interface range HundredGigE 3/0/25 to HundredGigE 3/0/28
+description reservered_TO_L2_EX-CORE
+
+#到XSW挂载聚合组
+interface range HundredGigE 2/0/20 to HundredGigE 2/0/24
+description reservered_TO_XSW
+lacp period short
+port link-aggregation group 200
+
+interface range HundredGigE 3/0/20 to HundredGigE 3/0/24
+description reservered_TO_XSW
+lacp period short
+port link-aggregation group 201
+
+#到PE挂载聚合组
+interface range HundredGigE 2/0/45 to HundredGigE 2/0/48
+description reservered_TO_EDGEPE
+lacp period short
+port link-aggregation group 100
+
+interface range HundredGigE 3/0/45 to HundredGigE 3/0/48
+description reservered_TO_EDGEPE
+lacp period short
+port link-aggregation group 100
+#
+interface HundredGigE2/0/1.20
+description reservered_TO_UCORE_TI-VPN10-Intranet
+ip binding vpn-instance TI-VPN10-Intranet
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+mtu 9000
+
+interface HundredGigE3/0/1.20
+description reservered_TO_UCORE_TI-VPN10-Intranet
+ip binding vpn-instance TI-VPN10-Intranet
+statistics l3-packet enable inbound
+statistics l3-packet enable outbound
+mtu 9000
+#
+
+bmp server 2
+server address 10.207.16.147 port 50002
+server connect-interface LoopBack0
+route-mode adj-rib-in post-policy
+route-mode adj-rib-out
+#
+bgp {{self_asn}}
+bgp update-delay on-startup 1800
+non-stop-routing
+router-id {{lo_ip}}
+timer keepalive 10 hold 30
+group {{datacenter}}_CDNL2_V4 external
+peer {{datacenter}}_CDNL2_V4 as-number {{l2_ex_core_asn}}
+peer {{datacenter}}_CDNL2_V4 route-update-interval 0
+peer {{datacenter}}_CDNL2_V4 bmp server 2
+group {{datacenter}}_CDNL2_V6 external
+peer {{datacenter}}_CDNL2_V6 as-number {{l2_ex_core_asn}}
+peer {{datacenter}}_CDNL2_V6 route-update-interval 0
+peer {{datacenter}}_CDNL2_V6 bmp server 2
+group {{datacenter}}_EDGEPE_V4 internal
+peer {{datacenter}}_EDGEPE_V4 route-update-interval 0
+peer {{datacenter}}_EDGEPE_V4 bmp server 2
+group {{datacenter}}_EDGEPE_V6 internal
+peer {{datacenter}}_EDGEPE_V6 route-update-interval 0
+peer {{datacenter}}_EDGEPE_V6 bmp server 2
+group {{datacenter}}_EDGEXSW_V4 external
+peer {{datacenter}}_EDGEXSW_V4 as-number {{lower_asn}}
+peer {{datacenter}}_EDGEXSW_V4 route-update-interval 0
+peer {{datacenter}}_EDGEXSW_V4 bmp server 2
+group {{datacenter}}_EDGEXSW_V6 external
+peer {{datacenter}}_EDGEXSW_V6 as-number {{lower_asn}}
+peer {{datacenter}}_EDGEXSW_V6 route-update-interval 0
+peer {{datacenter}}_EDGEXSW_V6 bmp server 2
+group {{upper_datacenter}}_UCORE_V4 external
+peer {{upper_datacenter}}_UCORE_V4 as-number 137718
+peer {{upper_datacenter}}_UCORE_V4 route-update-interval 0
+peer {{upper_datacenter}}_UCORE_V4 bmp server 2
+group {{upper_datacenter}}_UCORE_V6 external
+peer {{upper_datacenter}}_UCORE_V6 as-number 137718
+peer {{upper_datacenter}}_UCORE_V6 route-update-interval 0
+peer {{upper_datacenter}}_UCORE_V6 bmp server 2
+
+#
+address-family ipv4 unicast
+balance 32
+balance as-path-relax ebgp
+preference 20 200 200
+aggregate {{igw_vtep_summary_v4}} 255.255.255.248 detail-suppressed attribute-policy RP_IGW_VTEP_SUMMARY_V4
+aggregate {{lo_summary_ip}} 255.255.255.192 detail-suppressed attribute-policy RP_CV_LO_V4
+network {{lo_ip}} 255.255.255.255 route-policy RP_CV_LO_V4
+peer {{datacenter}}_CDNL2_V4 enable
+y
+peer {{datacenter}}_CDNL2_V4 route-policy FROM_{{datacenter}}_CDNL2_V4 import
+peer {{datacenter}}_CDNL2_V4 route-policy TO_{{datacenter}}_CDNL2_V4 export
+peer {{datacenter}}_CDNL2_V4 advertise-community
+peer {{datacenter}}_CDNL2_V4 advertise-ext-community
+peer {{datacenter}}_EDGEPE_V4 enable
+y
+peer {{datacenter}}_EDGEPE_V4 route-policy FROM_{{datacenter}}_EDGEPE_V4 import
+peer {{datacenter}}_EDGEPE_V4 route-policy TO_{{datacenter}}_EDGEPE_V4 export
+peer {{datacenter}}_EDGEPE_V4 advertise-community
+peer {{datacenter}}_EDGEPE_V4 advertise-ext-community
+peer {{datacenter}}_EDGEPE_V4 next-hop-local
+y
+peer {{datacenter}}_EDGEXSW_V4 enable
+y
+peer {{datacenter}}_EDGEXSW_V4 route-policy FROM_{{datacenter}}_EDGEXSW_V4 import
+peer {{datacenter}}_EDGEXSW_V4 route-policy TO_{{datacenter}}_EDGEXSW_V4 export
+peer {{datacenter}}_EDGEXSW_V4 advertise-community
+peer {{datacenter}}_EDGEXSW_V4 advertise-ext-community
+peer {{upper_datacenter}}_UCORE_V4 enable
+y
+peer {{upper_datacenter}}_UCORE_V4 route-policy FROM_{{upper_datacenter}}_UCORE_V4 import
+peer {{upper_datacenter}}_UCORE_V4 route-policy TO_{{upper_datacenter}}_UCORE_V4 export
+peer {{upper_datacenter}}_UCORE_V4 advertise-community
+peer {{upper_datacenter}}_UCORE_V4 advertise-ext-community
+#
+address-family ipv6 unicast
+balance 32
+balance as-path-relax ebgp
+preference 20 200 200
+aggregate {{lo_summary_ip6}} 64 detail-suppressed attribute-policy RP_CV_LO_V6
+network {{lo_ip6}} 128 route-policy RP_CV_LO_V6
+peer {{datacenter}}_CDNL2_V6 enable
+y
+peer {{datacenter}}_CDNL2_V6 route-policy FROM_{{datacenter}}_CDNL2_V6 import
+peer {{datacenter}}_CDNL2_V6 route-policy TO_{{datacenter}}_CDNL2_V6 export
+peer {{datacenter}}_CDNL2_V6 advertise-community
+peer {{datacenter}}_CDNL2_V6 advertise-ext-community
+peer {{datacenter}}_EDGEPE_V6 enable
+y
+peer {{datacenter}}_EDGEPE_V6 route-policy FROM_{{datacenter}}_EDGEPE_V6 import
+peer {{datacenter}}_EDGEPE_V6 route-policy TO_{{datacenter}}_EDGEPE_V6 export
+peer {{datacenter}}_EDGEPE_V6 advertise-community
+peer {{datacenter}}_EDGEPE_V6 advertise-ext-community
+peer {{datacenter}}_EDGEPE_V6 next-hop-local
+y
+peer {{datacenter}}_EDGEXSW_V6 enable
+y
+peer {{datacenter}}_EDGEXSW_V6 route-policy FROM_{{datacenter}}_EDGEXSW_V6 import
+peer {{datacenter}}_EDGEXSW_V6 route-policy TO_{{datacenter}}_EDGEXSW_V6 export
+peer {{datacenter}}_EDGEXSW_V6 advertise-community
+peer {{datacenter}}_EDGEXSW_V6 advertise-ext-community
+peer {{upper_datacenter}}_UCORE_V6 enable
+y
+peer {{upper_datacenter}}_UCORE_V6 route-policy FROM_{{upper_datacenter}}_UCORE_V6 import
+peer {{upper_datacenter}}_UCORE_V6 route-policy TO_{{upper_datacenter}}_UCORE_V6 export
+peer {{upper_datacenter}}_UCORE_V6 advertise-community
+peer {{upper_datacenter}}_UCORE_V6 advertise-ext-community
+#
+ip vpn-instance LOCAL_VPN_STEERING
+group {{datacenter}}_CDNL2_STEERING_V4 external
+peer {{datacenter}}_CDNL2_STEERING_V4 as-number {{l2_ex_core_asn}}
+peer {{datacenter}}_CDNL2_STEERING_V4 route-update-interval 0
+peer {{datacenter}}_CDNL2_STEERING_V4 bmp server 2
+group {{datacenter}}_CDNL2_STEERING_V6 external
+peer {{datacenter}}_CDNL2_STEERING_V6 as-number {{l2_ex_core_asn}}
+peer {{datacenter}}_CDNL2_STEERING_V6 route-update-interval 0
+peer {{datacenter}}_CDNL2_STEERING_V6 bmp server 2
+group {{datacenter}}_EDGEPE_STEERING_V4 internal
+peer {{datacenter}}_EDGEPE_STEERING_V4 route-update-interval 0
+peer {{datacenter}}_EDGEPE_STEERING_V4 bmp server 2
+group {{datacenter}}_EDGEPE_STEERING_V6 internal
+peer {{datacenter}}_EDGEPE_STEERING_V6 route-update-interval 0
+peer {{datacenter}}_EDGEPE_STEERING_V6 bmp server 2
+group {{datacenter}}_EDGEXSW_STEERING_V4 external
+peer {{datacenter}}_EDGEXSW_STEERING_V4 as-number {{lower_asn}}
+peer {{datacenter}}_EDGEXSW_STEERING_V4 route-update-interval 0
+peer {{datacenter}}_EDGEXSW_STEERING_V4 bmp server 2
+group {{datacenter}}_EDGEXSW_STEERING_V6 external
+peer {{datacenter}}_EDGEXSW_STEERING_V6 as-number {{lower_asn}}
+peer {{datacenter}}_EDGEXSW_STEERING_V6 route-update-interval 0
+peer {{datacenter}}_EDGEXSW_STEERING_V6 bmp server 2
+
+#
+address-family ipv4 unicast
+balance 32
+balance as-path-relax ebgp
+preference 20 200 200
+aggregate {{igw_vtep_summary_v4}} 255.255.255.248 detail-suppressed attribute-policy RP_IGW_VTEP_SUMMARY_V4
+peer {{datacenter}}_CDNL2_STEERING_V4 enable
+y
+peer {{datacenter}}_CDNL2_STEERING_V4 route-policy FROM_{{datacenter}}_CDNL2_STEERING_V4 import
+peer {{datacenter}}_CDNL2_STEERING_V4 route-policy TO_{{datacenter}}_CDNL2_STEERING_V4 export
+peer {{datacenter}}_CDNL2_STEERING_V4 advertise-community
+peer {{datacenter}}_CDNL2_STEERING_V4 advertise-ext-community
+peer {{datacenter}}_CDNL2_STEERING_V4 route-limit 5000
+peer {{datacenter}}_EDGEPE_STEERING_V4 enable
+y
+peer {{datacenter}}_EDGEPE_STEERING_V4 route-policy FROM_{{datacenter}}_EDGEPE_STEERING_V4 import
+peer {{datacenter}}_EDGEPE_STEERING_V4 route-policy TO_{{datacenter}}_EDGEPE_STEERING_V4 export
+peer {{datacenter}}_EDGEPE_STEERING_V4 advertise-community
+peer {{datacenter}}_EDGEPE_STEERING_V4 advertise-ext-community
+peer {{datacenter}}_EDGEPE_STEERING_V4 next-hop-local
+y
+peer {{datacenter}}_EDGEXSW_STEERING_V4 enable
+y
+peer {{datacenter}}_EDGEXSW_STEERING_V4 route-policy FROM_{{datacenter}}_EDGEXSW_STEERING_V4 import
+peer {{datacenter}}_EDGEXSW_STEERING_V4 route-policy TO_{{datacenter}}_EDGEXSW_STEERING_V4 export
+peer {{datacenter}}_EDGEXSW_STEERING_V4 advertise-community
+peer {{datacenter}}_EDGEXSW_STEERING_V4 advertise-ext-community
+#
+address-family ipv6 unicast
+balance 32
+balance as-path-relax ebgp
+preference 20 200 200
+peer {{datacenter}}_CDNL2_STEERING_V6 enable
+y
+peer {{datacenter}}_CDNL2_STEERING_V6 route-policy FROM_{{datacenter}}_CDNL2_STEERING_V6 import
+peer {{datacenter}}_CDNL2_STEERING_V6 route-policy TO_{{datacenter}}_CDNL2_STEERING_V6 export
+peer {{datacenter}}_CDNL2_STEERING_V6 advertise-community
+peer {{datacenter}}_CDNL2_STEERING_V6 advertise-ext-community
+peer {{datacenter}}_CDNL2_STEERING_V6 route-limit 5000
+peer {{datacenter}}_EDGEPE_STEERING_V6 enable
+y
+peer {{datacenter}}_EDGEPE_STEERING_V6 route-policy FROM_{{datacenter}}_EDGEPE_STEERING_V6 import
+peer {{datacenter}}_EDGEPE_STEERING_V6 route-policy TO_{{datacenter}}_EDGEPE_STEERING_V6 export
+peer {{datacenter}}_EDGEPE_STEERING_V6 advertise-community
+peer {{datacenter}}_EDGEPE_STEERING_V6 advertise-ext-community
+peer {{datacenter}}_EDGEPE_STEERING_V6 next-hop-local
+y
+peer {{datacenter}}_EDGEXSW_STEERING_V6 enable
+y
+peer {{datacenter}}_EDGEXSW_STEERING_V6 route-policy FROM_{{datacenter}}_EDGEXSW_STEERING_V6 import
+peer {{datacenter}}_EDGEXSW_STEERING_V6 route-policy TO_{{datacenter}}_EDGEXSW_STEERING_V6 export
+peer {{datacenter}}_EDGEXSW_STEERING_V6 advertise-community
+peer {{datacenter}}_EDGEXSW_STEERING_V6 advertise-ext-community
+#
+ip vpn-instance TI-VPN10-Intranet
+group {{datacenter}}_CDNL2_INTRANET_V4 external
+peer {{datacenter}}_CDNL2_INTRANET_V4 as-number {{l2_in_core_asn}}
+peer {{datacenter}}_CDNL2_INTRANET_V4 route-update-interval 0
+group {{datacenter}}_CDNL2_INTRANET_V6 external
+peer {{datacenter}}_CDNL2_INTRANET_V6 as-number {{l2_in_core_asn}}
+peer {{datacenter}}_CDNL2_INTRANET_V6 route-update-interval 0
+group {{datacenter}}_EDGEPE_INTRANET_V4 internal
+peer {{datacenter}}_EDGEPE_INTRANET_V4 route-update-interval 0
+peer {{datacenter}}_EDGEPE_INTRANET_V4 bmp server 2
+group {{datacenter}}_EDGEPE_INTRANET_V6 internal
+peer {{datacenter}}_EDGEPE_INTRANET_V6 route-update-interval 0
+peer {{datacenter}}_EDGEPE_INTRANET_V6 bmp server 2
+group {{upper_datacenter}}_UCORE_INTRANET_V4 external
+peer {{upper_datacenter}}_UCORE_INTRANET_V4 as-number 137718
+peer {{upper_datacenter}}_UCORE_INTRANET_V4 route-update-interval 0
+group {{upper_datacenter}}_UCORE_INTRANET_V6 external
+peer {{upper_datacenter}}_UCORE_INTRANET_V6 as-number 137718
+peer {{upper_datacenter}}_UCORE_INTRANET_V6 route-update-interval 0
+
+#
+address-family ipv4 unicast
+balance 32
+balance as-path-relax ebgp
+preference 20 200 200
+peer {{datacenter}}_CDNL2_INTRANET_V4 enable
+y
+peer {{datacenter}}_CDNL2_INTRANET_V4 route-policy FROM_{{datacenter}}_CDNL2_INTRANET_V4 import
+peer {{datacenter}}_CDNL2_INTRANET_V4 route-policy TO_{{datacenter}}_CDNL2_INTRANET_V4 export
+peer {{datacenter}}_CDNL2_INTRANET_V4 advertise-community
+peer {{datacenter}}_CDNL2_INTRANET_V4 advertise-ext-community
+peer {{datacenter}}_EDGEPE_INTRANET_V4 enable
+y
+peer {{datacenter}}_EDGEPE_INTRANET_V4 route-policy FROM_{{datacenter}}_EDGEPE_INTRANET_V4 import
+peer {{datacenter}}_EDGEPE_INTRANET_V4 route-policy TO_{{datacenter}}_EDGEPE_INTRANET_V4 export
+peer {{datacenter}}_EDGEPE_INTRANET_V4 advertise-community
+peer {{datacenter}}_EDGEPE_INTRANET_V4 advertise-ext-community
+peer {{datacenter}}_EDGEPE_INTRANET_V4 next-hop-local
+y
+peer {{upper_datacenter}}_UCORE_INTRANET_V4 enable
+y
+peer {{upper_datacenter}}_UCORE_INTRANET_V4 route-policy FROM_{{upper_datacenter}}_UCORE_INTRANET_V4 import
+peer {{upper_datacenter}}_UCORE_INTRANET_V4 route-policy TO_{{upper_datacenter}}_UCORE_INTRANET_V4 export
+peer {{upper_datacenter}}_UCORE_INTRANET_V4 advertise-community
+peer {{upper_datacenter}}_UCORE_INTRANET_V4 advertise-ext-community
+#
+address-family ipv6 unicast
+balance 32
+balance as-path-relax ebgp
+preference 20 200 200
+peer {{datacenter}}_CDNL2_INTRANET_V6 enable
+y
+peer {{datacenter}}_CDNL2_INTRANET_V6 route-policy FROM_{{datacenter}}_CDNL2_INTRANET_V6 import
+peer {{datacenter}}_CDNL2_INTRANET_V6 route-policy TO_{{datacenter}}_CDNL2_INTRANET_V6 export
+peer {{datacenter}}_CDNL2_INTRANET_V6 advertise-community
+peer {{datacenter}}_CDNL2_INTRANET_V6 advertise-ext-community
+peer {{datacenter}}_EDGEPE_INTRANET_V6 enable
+y
+peer {{datacenter}}_EDGEPE_INTRANET_V6 route-policy FROM_{{datacenter}}_EDGEPE_INTRANET_V6 import
+peer {{datacenter}}_EDGEPE_INTRANET_V6 route-policy TO_{{datacenter}}_EDGEPE_INTRANET_V6 export
+peer {{datacenter}}_EDGEPE_INTRANET_V6 advertise-community
+peer {{datacenter}}_EDGEPE_INTRANET_V6 advertise-ext-community
+peer {{datacenter}}_EDGEPE_INTRANET_V6 next-hop-local
+y
+peer {{upper_datacenter}}_UCORE_INTRANET_V6 enable
+y
+peer {{upper_datacenter}}_UCORE_INTRANET_V6 route-policy FROM_{{upper_datacenter}}_UCORE_INTRANET_V6 import
+peer {{upper_datacenter}}_UCORE_INTRANET_V6 route-policy TO_{{upper_datacenter}}_UCORE_INTRANET_V6 export
+peer {{upper_datacenter}}_UCORE_INTRANET_V6 advertise-community
+peer {{upper_datacenter}}_UCORE_INTRANET_V6 advertise-ext-community
+#
+ip vpn-instance TOB-DCN
+group {{datacenter}}_EDGEPE_TOB_DCN_V4 internal
+peer {{datacenter}}_EDGEPE_TOB_DCN_V4 route-update-interval 0
+peer {{datacenter}}_EDGEPE_TOB_DCN_V4 bmp server 2
+group {{datacenter}}_EDGEPE_TOB_DCN_V6 internal
+peer {{datacenter}}_EDGEPE_TOB_DCN_V6 route-update-interval 0
+peer {{datacenter}}_EDGEPE_TOB_DCN_V6 bmp server 2
+group {{datacenter}}_EDGEXSW_TOB_DCN_V4 external
+peer {{datacenter}}_EDGEXSW_TOB_DCN_V4 as-number {{lower_asn}}
+peer {{datacenter}}_EDGEXSW_TOB_DCN_V4 route-update-interval 0
+peer {{datacenter}}_EDGEXSW_TOB_DCN_V4 bmp server 2
+group {{datacenter}}_EDGEXSW_TOB_DCN_V6 external
+peer {{datacenter}}_EDGEXSW_TOB_DCN_V6 as-number {{lower_asn}}
+peer {{datacenter}}_EDGEXSW_TOB_DCN_V6 route-update-interval 0
+peer {{datacenter}}_EDGEXSW_TOB_DCN_V6 bmp server 2
+group {{upper_datacenter}}_UCORE_TOB_DCN_V4 external
+peer {{upper_datacenter}}_UCORE_TOB_DCN_V4 as-number 137718
+peer {{upper_datacenter}}_UCORE_TOB_DCN_V4 route-update-interval 0
+group {{upper_datacenter}}_UCORE_TOB_DCN_V6 external
+peer {{upper_datacenter}}_UCORE_TOB_DCN_V6 as-number 137718
+peer {{upper_datacenter}}_UCORE_TOB_DCN_V6 route-update-interval 0
+#
+address-family ipv4 unicast
+balance 32
+balance as-path-relax ebgp
+preference 20 200 200
+aggregate {{rgw_steering_vtep_summary_v4}} 255.255.255.224 detail-suppressed attribute-policy RP_RGW_VTEP_SUMMARY_V4
+aggregate {{lo_tob_dcn_summary_ip}} 255.255.255.224 detail-suppressed attribute-policy RP_CV_LO_TOB_DCN_V4
+peer {{datacenter}}_EDGEPE_TOB_DCN_V4 enable
+y
+peer {{datacenter}}_EDGEPE_TOB_DCN_V4 route-policy FROM_{{datacenter}}_EDGEPE_TOB_DCN_V4 import
+peer {{datacenter}}_EDGEPE_TOB_DCN_V4 route-policy TO_{{datacenter}}_EDGEPE_TOB_DCN_V4 export
+peer {{datacenter}}_EDGEPE_TOB_DCN_V4 advertise-community
+peer {{datacenter}}_EDGEPE_TOB_DCN_V4 advertise-ext-community
+peer {{datacenter}}_EDGEPE_TOB_DCN_V4 next-hop-local
+y
+peer {{datacenter}}_EDGEXSW_TOB_DCN_V4 enable
+y
+peer {{datacenter}}_EDGEXSW_TOB_DCN_V4 route-policy FROM_{{datacenter}}_EDGEXSW_TOB_DCN_V4 import
+peer {{datacenter}}_EDGEXSW_TOB_DCN_V4 route-policy TO_{{datacenter}}_EDGEXSW_TOB_DCN_V4 export
+peer {{datacenter}}_EDGEXSW_TOB_DCN_V4 advertise-community
+peer {{datacenter}}_EDGEXSW_TOB_DCN_V4 advertise-ext-community
+peer {{upper_datacenter}}_UCORE_TOB_DCN_V4 enable
+y
+peer {{upper_datacenter}}_UCORE_TOB_DCN_V4 route-policy FROM_{{upper_datacenter}}_UCORE_TOB_DCN_V4 import
+peer {{upper_datacenter}}_UCORE_TOB_DCN_V4 route-policy TO_{{upper_datacenter}}_UCORE_TOB_DCN_V4 export
+peer {{upper_datacenter}}_UCORE_TOB_DCN_V4 advertise-community
+peer {{upper_datacenter}}_UCORE_TOB_DCN_V4 advertise-ext-community
+#
+#
+address-family ipv6 unicast
+balance 32
+balance as-path-relax ebgp
+preference 20 200 200
+aggregate {{lo_tob_dcn_summary_ip6}} 64 detail-suppressed attribute-policy RP_CV_LO_TOB_DCN_V6
+peer {{datacenter}}_EDGEPE_TOB_DCN_V6 enable
+y
+peer {{datacenter}}_EDGEPE_TOB_DCN_V6 route-policy FROM_{{datacenter}}_EDGEPE_TOB_DCN_V6 import
+peer {{datacenter}}_EDGEPE_TOB_DCN_V6 route-policy TO_{{datacenter}}_EDGEPE_TOB_DCN_V6 export
+peer {{datacenter}}_EDGEPE_TOB_DCN_V6 advertise-community
+peer {{datacenter}}_EDGEPE_TOB_DCN_V6 advertise-ext-community
+peer {{datacenter}}_EDGEPE_TOB_DCN_V6 next-hop-local
+y
+peer {{datacenter}}_EDGEXSW_TOB_DCN_V6 enable
+y
+peer {{datacenter}}_EDGEXSW_TOB_DCN_V6 route-policy FROM_{{datacenter}}_EDGEXSW_TOB_DCN_V6 import
+peer {{datacenter}}_EDGEXSW_TOB_DCN_V6 route-policy TO_{{datacenter}}_EDGEXSW_TOB_DCN_V6 export
+peer {{datacenter}}_EDGEXSW_TOB_DCN_V6 advertise-community
+peer {{datacenter}}_EDGEXSW_TOB_DCN_V6 advertise-ext-community
+peer {{upper_datacenter}}_UCORE_TOB_DCN_V6 enable
+y
+peer {{upper_datacenter}}_UCORE_TOB_DCN_V6 route-policy FROM_{{upper_datacenter}}_UCORE_TOB_DCN_V6 import
+peer {{upper_datacenter}}_UCORE_TOB_DCN_V6 route-policy TO_{{upper_datacenter}}_UCORE_TOB_DCN_V6 export
+peer {{upper_datacenter}}_UCORE_TOB_DCN_V6 advertise-community
+peer {{upper_datacenter}}_UCORE_TOB_DCN_V6 advertise-ext-community
+#
+#
+route-policy FROM_{{upper_datacenter}}_UCORE_INTRANET_V4 permit node 10
+#
+route-policy FROM_{{upper_datacenter}}_UCORE_INTRANET_V4 deny node 1000
+#
+route-policy FROM_{{upper_datacenter}}_UCORE_INTRANET_V6 permit node 10
+#
+route-policy FROM_{{upper_datacenter}}_UCORE_INTRANET_V6 deny node 1000
+#
+route-policy FROM_{{upper_datacenter}}_UCORE_TOB_DCN_V4 permit node 10
+if-match ip address prefix-list PL_TOB_INTER_SUMMARY_V4
+#
+route-policy FROM_{{upper_datacenter}}_UCORE_TOB_DCN_V4 deny node 1000
+#
+route-policy FROM_{{upper_datacenter}}_UCORE_TOB_DCN_V6 permit node 10
+if-match ipv6 address prefix-list PL_TOB_INTER_SUMMARY_V6
+#
+route-policy FROM_{{upper_datacenter}}_UCORE_TOB_DCN_V6 deny node 1000
+#
+route-policy FROM_{{upper_datacenter}}_UCORE_V4 permit node 10
+if-match community name CL_CORE_DC_TAG
+#
+route-policy FROM_{{upper_datacenter}}_UCORE_V4 permit node 20
+if-match ip address prefix-list PL_INTER_SUMMARY_V4
+#
+route-policy FROM_{{upper_datacenter}}_UCORE_V4 permit node 30
+if-match ip address prefix-list PL_FAKEINTERNET_SUMMARY_V4
+#
+route-policy FROM_{{upper_datacenter}}_UCORE_V4 deny node 1000
+route-policy FROM_{{upper_datacenter}}_UCORE_V6 permit node 10
+if-match community name CL_CORE_DC_TAG
+#
+route-policy FROM_{{upper_datacenter}}_UCORE_V6 permit node 20
+if-match ipv6 address prefix-list PL_INTER_SUMMARY_V6
+#
+route-policy FROM_{{upper_datacenter}}_UCORE_V6 permit node 30
+if-match ipv6 address prefix-list PL_FAKEINTERNET_SUMMARY_V6
+#
+route-policy FROM_{{upper_datacenter}}_UCORE_V6 deny node 1000
+#
+route-policy FROM_{{datacenter}}_CDNL2_INTRANET_V4 permit node 10
+apply as-path {{self_asn}} replace
+apply community {{edge_region_intranet_community}} {{edge_az_intranet_community}}
+#
+route-policy FROM_{{datacenter}}_CDNL2_INTRANET_V4 deny node 1000
+#
+route-policy FROM_{{datacenter}}_CDNL2_INTRANET_V6 permit node 10
+apply as-path {{self_asn}} replace
+apply community {{edge_region_intranet_community}} {{edge_az_intranet_community}}
+#
+route-policy FROM_{{datacenter}}_CDNL2_INTRANET_V6 deny node 1000
+#
+route-policy FROM_{{datacenter}}_CDNL2_STEERING_V4 permit node 10
+if-match ip address prefix-list PL_{{datacenter}}_CDNL2_STEERING_V4
+apply as-path {{self_asn}} replace
+apply community {{region_community}} {{az_community}}
+#
+route-policy FROM_{{datacenter}}_CDNL2_STEERING_V4 deny node 1000
+#
+route-policy FROM_{{datacenter}}_CDNL2_STEERING_V6 permit node 10
+if-match ipv6 address prefix-list PL_{{datacenter}}_CDNL2_STEERING_V6
+apply as-path {{self_asn}} replace
+apply community {{region_community}} {{az_community}}
+#
+route-policy FROM_{{datacenter}}_CDNL2_STEERING_V6 deny node 1000
+#
+route-policy FROM_{{datacenter}}_CDNL2_V4 permit node 10
+if-match ip address prefix-list PL_{{datacenter}}_CDNL2_V4
+apply as-path {{self_asn}} replace
+apply community {{region_community}} {{az_community}}
+#
+route-policy FROM_{{datacenter}}_CDNL2_V4 deny node 1000
+#
+route-policy FROM_{{datacenter}}_CDNL2_V6 permit node 10
+if-match ipv6 address prefix-list PL_{{datacenter}}_CDNL2_V6
+apply as-path {{self_asn}} replace
+apply community {{region_community}} {{az_community}}
+#
+route-policy FROM_{{datacenter}}_CDNL2_V6 deny node 1000
+#
+route-policy FROM_{{datacenter}}_EDGEPE_INTRANET_V4 permit node 10
+#
+route-policy FROM_{{datacenter}}_EDGEPE_INTRANET_V4 deny node 1000
+#
+route-policy FROM_{{datacenter}}_EDGEPE_INTRANET_V6 permit node 10
+#
+route-policy FROM_{{datacenter}}_EDGEPE_INTRANET_V6 deny node 1000
+#
+route-policy FROM_{{datacenter}}_EDGEPE_STEERING_V4 permit node 10
+#
+route-policy FROM_{{datacenter}}_EDGEPE_STEERING_V4 deny node 1000
+#
+route-policy FROM_{{datacenter}}_EDGEPE_STEERING_V6 permit node 10
+#
+route-policy FROM_{{datacenter}}_EDGEPE_STEERING_V6 deny node 100
+#
+route-policy FROM_{{datacenter}}_EDGEPE_TOB_DCN_V4 permit node 10
+#
+route-policy FROM_{{datacenter}}_EDGEPE_TOB_DCN_V4 deny node 1000
+#
+route-policy FROM_{{datacenter}}_EDGEPE_TOB_DCN_V6 permit node 10
+#
+route-policy FROM_{{datacenter}}_EDGEPE_TOB_DCN_V6 deny node 1000
+#
+route-policy FROM_{{datacenter}}_EDGEPE_V4 permit node 10
+#
+route-policy FROM_{{datacenter}}_EDGEPE_V4 deny node 1000
+#
+route-policy FROM_{{datacenter}}_EDGEPE_V6 permit node 10
+#
+route-policy FROM_{{datacenter}}_EDGEPE_V6 deny node 1000
+#
+route-policy FROM_{{datacenter}}_EDGEXSW_STEERING_V4 permit node 10
+if-match community name CL_LOCAL_VPN_STEERING
+#
+route-policy FROM_{{datacenter}}_EDGEXSW_STEERING_V4 permit node 20
+if-match community name CL_IGW_VTEP
+#
+route-policy FROM_{{datacenter}}_EDGEXSW_STEERING_V4 permit node 30
+if-match community name CL_VERGW_VTEP
+#
+route-policy FROM_{{datacenter}}_EDGEXSW_STEERING_V4 deny node 1000
+#
+route-policy FROM_{{datacenter}}_EDGEXSW_STEERING_V6 permit node 10
+if-match community name CL_LOCAL_VPN_STEERING
+#
+route-policy FROM_{{datacenter}}_EDGEXSW_STEERING_V6 deny node 1000
+#
+route-policy FROM_{{datacenter}}_EDGEXSW_TOB_DCN_V4 permit node 10
+if-match community name CL_INBAND
+apply community {{tob_region_community}} {{tob_az_community}} additive
+#
+route-policy FROM_{{datacenter}}_EDGEXSW_TOB_DCN_V4 permit node 20
+if-match community name CL_VERGW_VTEP
+apply community {{tob_region_community}} {{tob_az_community}} additive
+#
+route-policy FROM_{{datacenter}}_EDGEXSW_TOB_DCN_V4 deny node 1000
+#
+route-policy FROM_{{datacenter}}_EDGEXSW_TOB_DCN_V6 permit node 10
+if-match community name CL_INBAND
+apply community {{tob_region_community}} {{tob_az_community}} additive
+#
+route-policy FROM_{{datacenter}}_EDGEXSW_TOB_DCN_V6 permit node 20
+if-match community name CL_VERGW_VTEP
+apply community {{tob_region_community}} {{tob_az_community}} additive
+#
+route-policy FROM_{{datacenter}}_EDGEXSW_TOB_DCN_V6 deny node 1000
+#
+route-policy FROM_{{datacenter}}_EDGEXSW_V4 permit node 10
+if-match community name CL_IGW_VTEP
+apply community {{region_community}} {{az_community}} additive
+#
+route-policy FROM_{{datacenter}}_EDGEXSW_V4 deny node 1000
+#
+route-policy FROM_{{datacenter}}_EDGEXSW_V6 permit node 10
+if-match community name CL_IGW_VTEP
+apply community {{region_community}} {{az_community}} additive
+#
+route-policy FROM_{{datacenter}}_EDGEXSW_V6 deny node 1000
+#
+route-policy RP_CV_LO_TOB_DCN_V4 permit node 10
+apply community {{tob_region_community}} {{tob_az_community}} 65535:100
+apply origin igp
+#
+route-policy RP_CV_LO_TOB_DCN_V6 permit node 10
+apply community {{tob_region_community}} {{tob_az_community}} 65535:100
+apply origin igp
+#
+route-policy RP_CV_LO_V4 permit node 10
+apply community {{region_community}} {{az_community}} 65535:100
+apply origin igp
+#
+route-policy RP_CV_LO_V6 permit node 10
+apply community {{region_community}} {{az_community}} 65535:100
+apply origin igp
+#
+route-policy RP_IGW_VTEP_SUMMARY_V4 permit node 10
+apply community {{region_community}} {{az_community}} 65520:13
+apply origin igp
+
+route-policy RP_RGW_VTEP_SUMMARY_V4 permit node 10
+apply community {{tob_region_community}} {{tob_az_community}} 65535:1119
+apply origin igp
+#
+route-policy TO_{{upper_datacenter}}_UCORE_INTRANET_V4 permit node 10
+if-match community name CL_EDGEPOP_{{datacenter}}_INTRANET
+#
+route-policy TO_{{upper_datacenter}}_UCORE_INTRANET_V4 deny node 1000
+#
+route-policy TO_{{upper_datacenter}}_UCORE_INTRANET_V6 permit node 10
+if-match community name CL_EDGEPOP_{{datacenter}}_INTRANET
+#
+route-policy TO_{{upper_datacenter}}_UCORE_INTRANET_V6 deny node 1000
+#
+route-policy TO_{{upper_datacenter}}_UCORE_TOB_DCN_V4 permit node 10
+if-match community name CL_EDGEPOP_TOB_DCN_{{datacenter}}
+#
+route-policy TO_{{upper_datacenter}}_UCORE_TOB_DCN_V4 deny node 1000
+#
+route-policy TO_{{upper_datacenter}}_UCORE_TOB_DCN_V6 permit node 10
+if-match community name CL_EDGEPOP_TOB_DCN_{{datacenter}}
+#
+route-policy TO_{{upper_datacenter}}_UCORE_TOB_DCN_V6 deny node 1000
+#
+route-policy TO_{{upper_datacenter}}_UCORE_V4 permit node 10
+if-match community name CL_EDGEPOP_{{datacenter}}
+#
+route-policy TO_{{upper_datacenter}}_UCORE_V4 deny node 1000
+#
+route-policy TO_{{upper_datacenter}}_UCORE_V6 deny node 10
+if-match community name CL_EDGEPOP_{{datacenter}}
+#
+route-policy TO_{{upper_datacenter}}_UCORE_V6 deny node 1000
+#
+route-policy TO_{{datacenter}}_CDNL2_INTRANET_V4 permit node 10
+#
+route-policy TO_{{datacenter}}_CDNL2_INTRANET_V4 deny node 1000
+#
+route-policy TO_{{datacenter}}_CDNL2_INTRANET_V6 permit node 10
+#
+route-policy TO_{{datacenter}}_CDNL2_INTRANET_V6 deny node 1000
+#
+route-policy TO_{{datacenter}}_CDNL2_STEERING_V4 permit node 10
+#
+route-policy TO_{{datacenter}}_CDNL2_STEERING_V4 deny node 1000
+#
+route-policy TO_{{datacenter}}_CDNL2_STEERING_V6 permit node 10
+#
+route-policy TO_{{datacenter}}_CDNL2_STEERING_V6 deny node 1000
+#
+route-policy TO_{{datacenter}}_CDNL2_V4 permit node 10
+if-match ip address prefix-list PL_FAKEINTERNET_SUMMARY_V4
+apply as-path {{self_asn}} {{self_asn}} {{self_asn}} {{self_asn}}
+#
+route-policy TO_{{datacenter}}_CDNL2_V4 deny node 1000
+#
+route-policy TO_{{datacenter}}_CDNL2_V6 permit node 10
+if-match ipv6 address prefix-list PL_FAKEINTERNET_SUMMARY_V6
+apply as-path {{self_asn}} {{self_asn}} {{self_asn}} {{self_asn}}
+#
+route-policy TO_{{datacenter}}_CDNL2_V6 deny node 1000
+#
+route-policy TO_{{datacenter}}_EDGEPE_INTRANET_V4 permit node 10
+#
+route-policy TO_{{datacenter}}_EDGEPE_INTRANET_V4 deny node 1000
+#
+route-policy TO_{{datacenter}}_EDGEPE_INTRANET_V6 permit node 10
+#
+route-policy TO_{{datacenter}}_EDGEPE_INTRANET_V6 deny node 1000
+#
+route-policy TO_{{datacenter}}_EDGEPE_STEERING_V4 permit node 10
+#
+route-policy TO_{{datacenter}}_EDGEPE_STEERING_V4 deny node 1000
+#
+route-policy TO_{{datacenter}}_EDGEPE_STEERING_V6 permit node 10
+#
+route-policy TO_{{datacenter}}_EDGEPE_STEERING_V6 deny node 1000
+#
+route-policy TO_{{datacenter}}_EDGEPE_TOB_DCN_V4 permit node 10
+#
+route-policy TO_{{datacenter}}_EDGEPE_TOB_DCN_V4 deny node 1000
+#
+route-policy TO_{{datacenter}}_EDGEPE_TOB_DCN_V6 permit node 10
+#
+route-policy TO_{{datacenter}}_EDGEPE_TOB_DCN_V6 deny node 1000
+#
+route-policy TO_{{datacenter}}_EDGEPE_V4 permit node 10
+#
+route-policy TO_{{datacenter}}_EDGEPE_V4 deny node 1000
+#
+route-policy TO_{{datacenter}}_EDGEPE_V6 permit node 10
+#
+route-policy TO_{{datacenter}}_EDGEPE_V6 deny node 1000
+#
+route-policy TO_{{datacenter}}_EDGEXSW_STEERING_V4 permit node 10
+#
+route-policy TO_{{datacenter}}_EDGEXSW_STEERING_V4 deny node 1000
+#
+route-policy TO_{{datacenter}}_EDGEXSW_STEERING_V6 permit node 10
+#
+route-policy TO_{{datacenter}}_EDGEXSW_STEERING_V6 deny node 1000
+#
+route-policy TO_{{datacenter}}_EDGEXSW_TOB_DCN_V4 permit node 10
+#
+route-policy TO_{{datacenter}}_EDGEXSW_TOB_DCN_V4 deny node 1000
+#
+route-policy TO_{{datacenter}}_EDGEXSW_TOB_DCN_V6 permit node 10
+#
+route-policy TO_{{datacenter}}_EDGEXSW_TOB_DCN_V6 deny node 1000
+#
+route-policy TO_{{datacenter}}_EDGEXSW_V4 permit node 10
+#
+route-policy TO_{{datacenter}}_EDGEXSW_V4 deny node 1000
+#
+route-policy TO_{{datacenter}}_EDGEXSW_V6 permit node 10
+#
+route-policy TO_{{datacenter}}_EDGEXSW_V6 deny node 1000
+#
+
+ip prefix-list PL_{{datacenter}}_CDNL2_STEERING_V4 index 10 permit 30.130.0.0 16 less-equal 24
+ip prefix-list PL_{{datacenter}}_CDNL2_STEERING_V4 index 20 permit 101.78.40.0 23 less-equal 30
+ip prefix-list PL_FAKEINTERNET_SUMMARY_V4 index 10 permit 30.130.0.0 16 less-equal 24
+ip prefix-list PL_INTER_SUMMARY_V4 index 10 permit 10.0.0.0 8
+ip prefix-list PL_TOB_INTER_SUMMARY_V4 index 10 permit 10.0.0.0 8
+ip prefix-list PL_TOB_INTER_SUMMARY_V4 index 20 permit 33.0.0.0 8
+ip prefix-list PL_{{datacenter}}_CDNL2_V4 index 10 permit 30.130.0.0 16 less-equal 24
+ip prefix-list PL_VE_FAKEINTERNET_V4 index 10 permit 103.238.20.0 24 less-equal 32
+ip prefix-list PL_VE_FAKEINTERNET_V4 index 20 permit 103.123.116.96 27 less-equal 32
+ip prefix-list PL_IGW_VTEP_SUMMARY_V4 index 10 permit 101.78.32.0 22 less-equal 29
+#
+ipv6 prefix-list PL_{{datacenter}}_CDNL2_STEERING_V6 index 10 permit {{fakeinternet_v6}} 56
+ipv6 prefix-list PL_FAKEINTERNET_SUMMARY_V6 index 10 permit 2406:D440:FE00:: 40 less-equal 56
+ipv6 prefix-list PL_INTER_SUMMARY_V6 index 10 permit FDBD:: 16
+ipv6 prefix-list PL_TOB_INTER_SUMMARY_V6 index 10 permit FDBD:: 16
+ipv6 prefix-list PL_{{datacenter}}_CDNL2_V6 index 10 permit {{fakeinternet_v6}} 56
+ipv6 prefix-list PL_{{datacenter}}_LO_DETAIL_V6 index 10 permit {{lo_summary_ip6}} 64 less-equal 128
+ipv6 prefix-list PL_{{datacenter}}_LO_V6 index 10 permit {{lo_summary_ip6}} 64
+ipv6 prefix-list PL_{{datacenter}}_LO_V6 index 20 permit {{lo_ip6}} 128
+#
+ip community-list basic CL_CORE_DC_TAG permit 65520:11000
+ip community-list basic CL_CORE_DC_TAG permit 65520:11001
+ip community-list basic CL_CORE_DC_TAG permit 65520:5
+ip community-list basic CL_CORE_DC_TAG permit 65520:6
+ip community-list basic CL_CORE_DC_TAG permit 65520:7
+ip community-list basic CL_EDGEPOP_{{datacenter}} permit {{az_community}}
+ip community-list basic CL_EDGEPOP_{{datacenter}}_INTRANET permit {{edge_az_intranet_community}}
+ip community-list basic CL_EDGEPOP_TOB_DCN_{{datacenter}} permit {{tob_az_community}}
+ip community-list basic CL_INBAND permit 65520:14
+ip community-list basic CL_LOCAL_VPN_STEERING permit 65520:15
+ip community-list basic CL_IGW_VTEP permit 65520:13
+ip community-list basic CL_IGW_VTEP permit 65520:11001
+ip community-list basic CL_VERGW_VTEP permit 65535:1119
+#
+scheduler logfile size 16
+#
+line class aux
+user-role network-admin
+#
+line class vty
+user-role network-operator
+#
+line aux 0 1
+user-role network-admin
+#
+line vty 0 63
+authentication-mode scheme
+user-role network-admin
+user-role network-operator
+protocol inbound ssh
+idle-timeout 30 0
+command authorization
+command accounting
+#
+line vty 64 127
+user-role network-operator
+#
+ip route-static {{lo_summary_ip}} 26 NULL0
+ip route-static vpn-instance mgt 0.0.0.0 0 M-GigabitEthernet0/0/1 {{mgt_gw}}
+ipv6 route-static {{lo_summary_ip6}} 64 NULL0
+#
+info-center timestamp loghost iso
+info-center logbuffer size 1024
+info-center loghost source LoopBack0
+info-center loghost 10.8.8.12 facility local5
+#
+snmp-agent
+snmp-agent local-engineid 800063A28008688D6AB6AF00000001
+snmp-agent community read cipher $c$3$lDaTPnJHj+XsRfyb4Wwi1gufEHLUzdX415ON
+snmp-agent sys-info version v2c v3
+snmp-agent packet max-size 17940
+snmp-agent packet response dscp 60
+#
+ssh server enable
+ssh user admin service-type all authentication-type password
+ssh user bytedance service-type all authentication-type password
+ssh server acl 2990
+ssh server ipv6 acl ipv6 2990
+ssh server dscp 60
+scp server enable
+#
+ntp-service enable
+ntp-service unicast-server 10.8.8.12 source LoopBack0
+ntp-service unicast-server 122.14.230.111 vpn-instance mgt
+ntp-service dscp 60
+#
+acl number 2990
+rule 1 permit source 10.20.26.12 0
+rule 2 permit source 10.13.34.196 0
+rule 3 permit source 10.8.29.87 0
+rule 4 permit source 10.129.19.23 0
+rule 5 permit source 10.234.79.31 0
+rule 6 permit source 10.188.20.132 0
+rule 7 permit source 10.188.32.132 0
+rule 8 permit source 10.8.251.34 0
+rule 9 permit source 10.12.214.66 0
+rule 10 permit source 10.22.47.80 0
+rule 11 permit source 10.129.16.229 0
+rule 12 permit source 10.188.20.135 0
+rule 13 permit source 10.246.17.233 0
+rule 14 permit source 10.129.24.137 0
+rule 15 permit source 10.246.17.152 0
+rule 16 permit source 10.153.28.158 0
+rule 17 permit source 10.144.38.142 0
+rule 18 permit source 10.124.186.102 0
+rule 19 permit source 10.98.130.96 0
+rule 20 permit source 10.161.63.95 0
+rule 21 permit source 10.175.91.209 0
+rule 22 permit source 10.250.76.148 0
+rule 23 permit source 10.250.171.209 0
+rule 24 permit source 10.250.176.134 0
+rule 25 permit source 10.207.16.48 0
+rule 26 permit source 10.177.18.72 0
+rule 27 permit source 10.166.51.21 0
+rule 28 permit source 10.166.50.77 0
+rule 29 permit source 10.181.16.74 0
+rule 30 permit source 10.181.17.20 0
+rule 31 permit source 10.165.16.73 0
+rule 32 permit source 10.248.137.144 0
+rule 33 permit source 10.8.79.0 0.0.0.255
+rule 101 permit vpn-instance mgt source 10.20.26.12 0
+rule 102 permit vpn-instance mgt source 10.13.34.196 0
+rule 103 permit vpn-instance mgt source 10.8.29.87 0
+rule 104 permit vpn-instance mgt source 10.129.19.23 0
+rule 105 permit vpn-instance mgt source 10.234.79.31 0
+rule 106 permit vpn-instance mgt source 10.188.20.132 0
+rule 107 permit vpn-instance mgt source 10.188.32.132 0
+rule 108 permit vpn-instance mgt source 10.8.251.34 0
+rule 109 permit vpn-instance mgt source 10.12.214.66 0
+rule 110 permit vpn-instance mgt source 10.22.47.80 0
+rule 111 permit vpn-instance mgt source 10.129.16.229 0
+rule 112 permit vpn-instance mgt source 10.188.20.135 0
+rule 113 permit vpn-instance mgt source 10.246.17.233 0
+rule 114 permit vpn-instance mgt source 10.129.24.137 0
+rule 115 permit vpn-instance mgt source 10.246.17.152 0
+rule 116 permit vpn-instance mgt source 10.153.28.158 0
+rule 117 permit vpn-instance mgt source 10.144.38.142 0
+rule 118 permit vpn-instance mgt source 10.124.186.102 0
+rule 119 permit vpn-instance mgt source 10.98.130.96 0
+rule 120 permit vpn-instance mgt source 10.161.63.95 0
+rule 121 permit vpn-instance mgt source 10.175.91.209 0
+rule 122 permit vpn-instance mgt source 10.250.76.148 0
+rule 123 permit vpn-instance mgt source 10.250.171.209 0
+rule 124 permit vpn-instance mgt source 10.250.176.134 0
+rule 125 permit vpn-instance mgt source 10.207.16.48 0
+rule 126 permit vpn-instance mgt source 10.177.18.72 0
+rule 127 permit vpn-instance mgt source 10.166.51.21 0
+rule 128 permit vpn-instance mgt source 10.166.50.77 0
+rule 129 permit vpn-instance mgt source 10.181.16.74 0
+rule 130 permit vpn-instance mgt source 10.181.17.20 0
+rule 131 permit vpn-instance mgt source 10.165.16.73 0
+rule 132 permit vpn-instance mgt source 10.248.137.144 0
+rule 133 permit vpn-instance mgt source 10.8.79.0 0.0.0.255
+rule 210 permit vpn-instance mgt source 36.110.131.0 0.0.0.255
+rule 210 comment LF-CT
+rule 220 permit vpn-instance mgt source 221.194.170.128 0.0.0.127
+rule 220 comment LF-CU
+rule 230 permit vpn-instance mgt source 221.194.187.128 0.0.0.127
+rule 230 comment LF-CU
+rule 240 permit vpn-instance mgt source 111.62.106.0 0.0.0.255
+rule 240 comment LF-CM
+rule 250 permit vpn-instance mgt source 122.14.229.0 0.0.0.255
+rule 250 comment seal
+rule 260 permit vpn-instance mgt source 106.38.226.0 0.0.0.255
+rule 260 comment HL-CT
+rule 270 permit vpn-instance mgt source 116.132.239.0 0.0.0.255
+rule 270 comment HL-CU
+rule 280 permit vpn-instance mgt source 111.63.61.128 0.0.0.127
+rule 280 comment HL-CM
+rule 290 permit vpn-instance mgt source 111.63.211.128 0.0.0.127
+rule 290 comment HL-CM
+rule 300 permit vpn-instance mgt source 123.103.48.12 0.0.0.3
+rule 300 comment seal
+rule 310 permit vpn-instance mgt source 123.103.49.12 0.0.0.3
+rule 310 comment seal
+rule 320 permit vpn-instance mgt source 45.248.239.0 0.0.0.255
+rule 320 comment QD-BGP
+rule 330 permit vpn-instance mgt source 121.30.179.0 0.0.0.255
+rule 330 comment LQ-CU
+rule 340 permit vpn-instance mgt source 183.201.126.0 0.0.0.255
+rule 340 comment LQ-CM
+rule 350 permit vpn-instance mgt source 221.194.189.0 0.0.0.31
+rule 350 comment WJ-CU
+rule 360 permit vpn-instance mgt source 123.58.10.0 0.0.0.255
+rule 360 comment LF-edgejump
+rule 370 permit vpn-instance mgt source 220.243.131.0 0.0.0.255
+rule 370 comment HL-edgejump_and_seal
+rule 1210 permit source 36.110.131.0 0.0.0.255
+rule 1210 comment LF-CT
+rule 1220 permit source 221.194.170.128 0.0.0.127
+rule 1220 comment LF-CU
+rule 1230 permit source 221.194.187.128 0.0.0.127
+rule 1230 comment LF-CU
+rule 1240 permit source 111.62.106.0 0.0.0.255
+rule 1240 comment LF-CM
+rule 1250 permit source 122.14.229.0 0.0.0.255
+rule 1250 comment seal
+rule 1260 permit source 106.38.226.0 0.0.0.255
+rule 1260 comment HL-CT
+rule 1270 permit source 116.132.239.0 0.0.0.255
+rule 1270 comment HL-CU
+rule 1280 permit source 111.63.61.128 0.0.0.127
+rule 1280 comment HL-CM
+rule 1290 permit source 111.63.211.128 0.0.0.127
+rule 1290 comment HL-CM
+rule 1300 permit source 123.103.48.12 0.0.0.3
+rule 1300 comment seal
+rule 1310 permit source 123.103.49.12 0.0.0.3
+rule 1310 comment seal
+rule 1320 permit source 45.248.239.0 0.0.0.255
+rule 1320 comment QD-BGP
+rule 1330 permit source 121.30.179.0 0.0.0.255
+rule 1330 comment LQ-CU
+rule 1340 permit source 183.201.126.0 0.0.0.255
+rule 1340 comment LQ-CM
+rule 1350 permit source 221.194.189.0 0.0.0.31
+rule 1350 comment WJ-CU
+rule 1360 permit source 123.58.10.0 0.0.0.255
+rule 1360 comment LF-edgejump
+rule 1370 permit source 220.243.131.0 0.0.0.255
+rule 1370 comment HL-edgejump_and_seal
+#
+acl number 3001
+rule 5 permit icmp
+rule 10 permit tcp established
+rule 15 permit tcp destination-port eq www
+rule 20 permit tcp destination-port eq 443
+rule 25 permit tcp destination-port eq 8900
+rule 30 permit tcp destination-port eq bgp
+rule 35 permit tcp destination-port eq 1935
+rule 40 permit tcp destination-port eq 9929
+rule 45 permit tcp destination-port range 9921 9928
+rule 50 permit tcp destination-port eq 1105
+rule 55 permit tcp destination-port eq 8080
+rule 60 permit tcp destination-port eq 8088
+rule 100 deny udp destination-port eq 1812
+rule 105 deny udp destination-port eq snmp
+rule 110 deny udp destination-port eq ntp
+rule 115 deny udp destination-port eq 11211
+rule 120 deny udp source-port eq 11211
+rule 125 deny udp source-port eq 0
+rule 130 deny udp destination-port eq 0
+rule 135 deny ipinip
+rule 140 deny 41
+rule 1000 deny tcp
+#
+acl ipv6 number 2990
+rule 1 permit source FDBD:DC02:9:51::12/128
+rule 2 permit source FDBD:DC01:14:86::196/128
+rule 3 permit source FDBD:DC01:13:64::87/128
+rule 4 permit source FDBD:DC03:2:13::23/128
+rule 5 permit source FDBD:DC51:4000:253::31/128
+rule 6 permit source FDBD:DC61:2:29::132/128
+rule 7 permit source FDBD:DC61:2:122::132/128
+rule 8 permit source FDBD:DC01:103:292::66/128
+rule 9 permit source FDBD:DC02:7:136::80/128
+rule 10 permit source FDBD:DC03:2:4::229/128
+rule 11 permit source FDBD:DC61:2:29::135/128
+rule 12 permit source FDBD:DC51:4002:8::233/128
+rule 13 permit source FDBD:DC03:2:35::137/128
+rule 14 permit source FDBD:DC51:4002:7::152/128
+rule 15 permit source FDBD:DC01:2:61::158/128
+rule 16 permit source FDBD:DC02:13:91::142/128
+rule 17 permit source FDBD:DC05:1:190::95/128
+rule 18 permit source FDBD:DC03:15:304::209/128
+rule 19 permit source FDBD:DC01:24:243::148/128
+rule 20 permit source FDBD:DC01:24:624::209/128
+rule 21 permit source FDBD:DC01:24:643::134/128
+rule 22 permit source FDBD:DC41:2:1::48/128
+rule 23 permit source FDBD:DC42:2:10::72/128
+rule 24 permit source FDBD:DC42:3:141::21/128
+rule 25 permit source FDBD:DC42:3:138::77/128
+rule 26 permit source FDBD:DC43:1:2::74/128
+rule 27 permit source FDBD:DC43:1:5::20/128
+rule 28 permit source FDBD:DC43:4:2::73/128
+rule 29 permit source FDBD:DC03:FF:1:1:248:137:144/128
+rule 30 permit source FDBD:DC00::10:8:79:0/112
+rule 101 permit vpn-instance mgt source FDBD:DC02:9:51::12/128
+rule 102 permit vpn-instance mgt source FDBD:DC01:14:86::196/128
+rule 103 permit vpn-instance mgt source FDBD:DC01:13:64::87/128
+rule 104 permit vpn-instance mgt source FDBD:DC03:2:13::23/128
+rule 105 permit vpn-instance mgt source FDBD:DC51:4000:253::31/128
+rule 106 permit vpn-instance mgt source FDBD:DC61:2:29::132/128
+rule 107 permit vpn-instance mgt source FDBD:DC61:2:122::132/128
+rule 108 permit vpn-instance mgt source FDBD:DC01:103:292::66/128
+rule 109 permit vpn-instance mgt source FDBD:DC02:7:136::80/128
+rule 110 permit vpn-instance mgt source FDBD:DC03:2:4::229/128
+rule 111 permit vpn-instance mgt source FDBD:DC61:2:29::135/128
+rule 112 permit vpn-instance mgt source FDBD:DC51:4002:8::233/128
+rule 113 permit vpn-instance mgt source FDBD:DC03:2:35::137/128
+rule 114 permit vpn-instance mgt source FDBD:DC51:4002:7::152/128
+rule 115 permit vpn-instance mgt source FDBD:DC01:2:61::158/128
+rule 116 permit vpn-instance mgt source FDBD:DC02:13:91::142/128
+rule 117 permit vpn-instance mgt source FDBD:DC05:1:190::95/128
+rule 118 permit vpn-instance mgt source FDBD:DC03:15:304::209/128
+rule 119 permit vpn-instance mgt source FDBD:DC01:24:243::148/128
+rule 120 permit vpn-instance mgt source FDBD:DC01:24:624::209/128
+rule 121 permit vpn-instance mgt source FDBD:DC01:24:643::134/128
+rule 122 permit vpn-instance mgt source FDBD:DC41:2:1::48/128
+rule 123 permit vpn-instance mgt source FDBD:DC42:2:10::72/128
+rule 124 permit vpn-instance mgt source FDBD:DC42:3:141::21/128
+rule 125 permit vpn-instance mgt source FDBD:DC42:3:138::77/128
+rule 126 permit vpn-instance mgt source FDBD:DC43:1:2::74/128
+rule 127 permit vpn-instance mgt source FDBD:DC43:1:5::20/128
+rule 128 permit vpn-instance mgt source FDBD:DC43:4:2::73/128
+rule 129 permit vpn-instance mgt source FDBD:DC03:FF:1:1:248:137:144/128
+rule 130 permit vpn-instance mgt source FDBD:DC00::10:8:79:0/112
+#
+hwtacacs nas-ip {{lo_ip}}
+hwtacacs nas-ip {{mgt_ip}} vpn-instance mgt
+hwtacacs dscp 60
+#
+hwtacacs scheme bytedance
+primary authentication 10.8.8.12 4949 key cipher $c$3$8GjYR1Hak0whoUBnAm64SzD0uDVnO9IHjvRrnDekPQ==
+primary authorization 10.8.8.12 4949 key cipher $c$3$GhL/I3DvZ49DKUUlSJmfnY5/kf2biWSDMFI6LiLwyQ==
+primary accounting 10.8.8.12 4949 key cipher $c$3$CbMEmo8mFrT/JmdaQ2LEY4pWriHGRxFhNRWFazAdGw==
+secondary authentication 101.126.58.2 8900 vpn-instance mgt key cipher $c$3$RxqqPaMu5QZWFDYi9cEiStwmLevK2llA+Hbzxxa99g==
+secondary authorization 101.126.58.2 8900 vpn-instance mgt key cipher $c$3$0lLZcF4XW3+DPBCTDf3XJhzsDyyesYY8QjadNhhsJw==
+secondary accounting 101.126.58.2 8900 vpn-instance mgt key cipher $c$3$jdmCRIuYAQFIYusx9q9tqIa/SolTHj3qjYz9/eHW8A==
+user-name-format without-domain
+#
+radius scheme system
+user-name-format without-domain
+#
+domain name bytedance
+authentication default hwtacacs-scheme bytedance local
+authorization default hwtacacs-scheme bytedance local
+accounting default hwtacacs-scheme bytedance local
+#
+domain name system
+#
+domain default enable bytedance
+#
+role name level-0
+description Predefined level-0 role
+#
+role name level-1
+description Predefined level-1 role
+#
+role name level-2
+description Predefined level-2 role
+#
+role name level-3
+description Predefined level-3 role
+#
+role name level-4
+description Predefined level-4 role
+#
+role name level-5
+description Predefined level-5 role
+#
+role name level-6
+description Predefined level-6 role
+#
+role name level-7
+description Predefined level-7 role
+#
+role name level-8
+description Predefined level-8 role
+#
+role name level-9
+description Predefined level-9 role
+#
+role name level-10
+description Predefined level-10 role
+#
+role name level-11
+description Predefined level-11 role
+#
+role name level-12
+description Predefined level-12 role
+#
+role name level-13
+description Predefined level-13 role
+#
+role name level-14
+description Predefined level-14 role
+#
+user-group system
+#
+local-user admin class manage
+password hash $h$6$E0CGM6mWusGxnWyV$vlHNGegvxIkIKHQbu1XecJXWCQn7Vk63rZtut9OrRHbk/2tcYjjb//7rZkHaIKYa6FHBo+VuW4G1TqZ36wJkUA==
+service-type ssh terminal
+authorization-attribute user-role network-admin
+authorization-attribute user-role network-operator
+#
+local-user bytedance class manage
+password hash $h$6$ovnsYXNAETfM+zgy$ibfOk0JF8lonofutASJfIzwXtoNQ6+4B2xSJaF8lqc2ps2Cj53Z9Kl4hCC3VF3804hmj1NfEYUHpovc2+DVMSA==
+service-type ssh terminal
+authorization-attribute user-role level-15
+authorization-attribute user-role network-admin
+authorization-attribute user-role network-operator
+#
+grpc enable
+#
+telemetry
+sensor-group 1
+sensor path buffermonitor/commbufferusages
+sensor path buffermonitor/ecnandwredstatistics
+sensor path buffermonitor/egressdrops
+sensor path buffermonitor/pfcstatistics
+sensor path device/cpus
+sensor path diagnostic/memories
+sensor path ifmgr/statistics
+sensor path ipfw/ipstatistic
+sensor path qstat/queuestat
+destination-group 1
+ipv4-address 10.8.8.30 port 12345
+subscription 1
+sensor-group 1 sample-interval 5
+source-address interface LoopBack0
+destination-group 1
+#
+
+#接口配置
+{% for link in link -%}
+{%- if 'p2p' in link.type -%}
+interface {{link.local_port|replace('100GE', 'HundredGigE')}}
+undo shutdown
+description N={{link.peer_switch}}:I={{link.peer_port|replace('Route-Aggregation', 'RAGG')}}
+ip address {{link.local_ipv4}} 255.255.255.254
+ipv6 address {{link.local_ipv6}}/127
+#
+{% endif -%}
+
+{% if 'port-channel' in link.type %}
+interface {{link.local_port|replace('100GE', 'HundredGigE')}}
+undo shutdown
+description N={{link.peer_switch}}:I={{link.peer_port}}
+#
+{% endif %}
+
+{%- endfor %}
+
+{%- set datacenter = datacenter -%}
+{%- set self_asn = self_asn -%}
+{%- set upper_datacenter = upper_datacenter -%}
+
+#bgp配置
+bgp {{ self_asn }}
+{% for link in link -%}
+{% if 'GOBAL' in link.local_vpn and 'p2p' in link.type -%}
+{% if 'UCORE' in link.peer_switch or '.EX-CORE' in link.peer_switch %}
+peer {{ link.peer_ipv4 }} group {{ upper_datacenter }}_UCORE_V4
+peer {{ link.peer_ipv6 }} group {{ upper_datacenter }}_UCORE_V6
+{% endif -%}
+{% if 'XSW' in link.peer_switch %}
+peer {{ link.peer_ipv4 }} group {{ datacenter }}_EDGEXSW_V4
+peer {{ link.peer_ipv6 }} group {{ datacenter }}_EDGEXSW_V6
+{% endif -%}
+{% if 'EDGE-PE' in link.peer_switch %}
+peer {{ link.peer_ipv4 }} group {{ datacenter }}_EDGEPE_V4
+peer {{ link.peer_ipv6 }} group {{ datacenter }}_EDGEPE_V6
+{% endif -%}
+
+{% if 'EX-ISP' in link.peer_switch %}
+peer {{ link.peer_ipv4 }} group {{ datacenter }}_CDNL2_V4
+peer {{ link.peer_ipv6 }} group {{ datacenter }}_CDNL2_V6
+{% endif -%}
+
+{% endif %}
+{%- endfor -%}
+#
+ip vpn-instance LOCAL_VPN_STEERING
+{% for link in link -%}
+{% if 'LOCAL_VPN_STEERING' in link.local_vpn and 'p2p' in link.type -%}
+{% if 'XSW' in link.peer_switch %}
+peer {{ link.peer_ipv4 }} group {{ datacenter }}_EDGEXSW_STEERING_V4
+y
+peer {{ link.peer_ipv6 }} group {{ datacenter }}_EDGEXSW_STEERING_V6
+y
+{% endif -%}
+
+{% if 'EDGE-PE' in link.peer_switch %}
+peer {{ link.peer_ipv4 }} group {{ datacenter }}_EDGEPE_STEERING_V4
+y
+peer {{ link.peer_ipv6 }} group {{ datacenter }}_EDGEPE_STEERING_V6
+y
+{% endif -%}
+
+{% if 'EX-ISP' in link.peer_switch %}
+peer {{ link.peer_ipv4 }} group {{ datacenter }}_CDNL2_STEERING_V4
+y
+peer {{ link.peer_ipv6 }} group {{ datacenter }}_CDNL2_STEERING_V6
+y
+{% endif -%}
+
+{% endif -%}
+{%- endfor -%}
+#
+ip vpn-instance TI-VPN10-Intranet
+{% for link in link -%}
+{% if 'TI-VPN10-Intranet' in link.local_vpn and 'p2p' in link.type -%}
+{% if 'UCORE' in link.peer_switch or '.EX-CORE' in link.peer_switch %}
+peer {{ link.peer_ipv4 }} group {{ upper_datacenter }}_UCORE_INTRANET_V4
+y
+peer {{ link.peer_ipv6 }} group {{ upper_datacenter }}_UCORE_INTRANET_V6
+y
+{% endif -%}
+
+{% if 'IN-CORE' in link.peer_switch %}
+peer {{ link.peer_ipv4 }} group {{ datacenter }}_CDNL2_INTRANET_V4
+y
+peer {{ link.peer_ipv6 }} group {{ datacenter }}_CDNL2_INTRANET_V6
+y
+{% endif -%}
+
+{% if 'EDGE-PE' in link.peer_switch %}
+peer {{ link.peer_ipv4 }} group {{ datacenter }}_EDGEPE_INTRANET_V4
+y
+peer {{ link.peer_ipv6 }} group {{ datacenter }}_EDGEPE_INTRANET_V6
+y
+{% endif -%}
+{% endif -%}
+{%- endfor -%}
+#
+ip vpn-instance TOB-DCN
+{% for link in link -%}
+{% if 'TOB-DCN' in link.local_vpn and 'p2p' in link.type -%}
+{% if 'UCORE' in link.peer_switch or '.EX-CORE' in link.peer_switch %}
+peer {{ link.peer_ipv4 }} group {{ upper_datacenter }}_UCORE_TOB_DCN_V4
+y
+peer {{ link.peer_ipv6 }} group {{ upper_datacenter }}_UCORE_TOB_DCN_V6
+y
+{% endif -%}
+
+{% if 'EDGE-PE' in link.peer_switch %}
+peer {{ link.peer_ipv4 }} group {{ datacenter }}_EDGEPE_TOB_DCN_V4
+y
+peer {{ link.peer_ipv6 }} group {{ datacenter }}_EDGEPE_TOB_DCN_V6
+y
+{% endif -%}
+{% if 'XSW' in link.peer_switch %}
+peer {{ link.peer_ipv4 }} group {{ datacenter }}_EDGEXSW_TOB_DCN_V4
+y
+peer {{ link.peer_ipv6 }} group {{ datacenter }}_EDGEXSW_TOB_DCN_V6
+y
+{% endif -%}
+{% endif -%}
+{%- endfor -%}
+
+return

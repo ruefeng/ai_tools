@@ -1,0 +1,408 @@
+hostname: JSYCSX_A1_102-D-12-17.EDGE-PE-0-0
+mgt_gw: 58.241.213.62
+mgt_ip: 58.241.213.50
+mgt_ip_mask: '28'
+
+
+# link:
+# - local_ipv4: ''
+#   local_ipv6: ''
+#   local_port: 100GE2/0/45
+#   local_vpn: GOBAL
+#   peer_ipv4: ''
+#   peer_ipv6: ''
+#   peer_port: 100GE2/0/45
+#   peer_switch: JSYCSX_DC_302-A-02-17.EDGE-PE-0-1
+#   peer_vpn: GOBAL
+#   type: port-channel
+# - local_ipv4: ''
+#   local_ipv6: ''
+#   local_port: 100GE2/0/46
+#   local_vpn: GOBAL
+#   peer_ipv4: ''
+#   peer_ipv6: ''
+#   peer_port: 100GE2/0/46
+#   peer_switch: JSYCSX_DC_302-A-02-17.EDGE-PE-0-1
+#   peer_vpn: GOBAL
+#   type: port-channel
+# - local_ipv4: ''
+#   local_ipv6: ''
+#   local_port: 100GE2/0/47
+#   local_vpn: GOBAL
+#   peer_ipv4: ''
+#   peer_ipv6: ''
+#   peer_port: 100GE2/0/47
+#   peer_switch: JSYCSX_DC_302-A-02-17.EDGE-PE-0-1
+#   peer_vpn: GOBAL
+#   type: port-channel
+# - local_ipv4: ''
+#   local_ipv6: ''
+#   local_port: 100GE2/0/48
+#   local_vpn: GOBAL
+#   peer_ipv4: ''
+#   peer_ipv6: ''
+#   peer_port: 100GE2/0/48
+#   peer_switch: JSYCSX_DC_302-A-02-17.EDGE-PE-0-1
+#   peer_vpn: GOBAL
+#   type: port-channel
+# - local_ipv4: ''
+#   local_ipv6: ''
+#   local_port: 100GE3/0/45
+#   local_vpn: GOBAL
+#   peer_ipv4: ''
+#   peer_ipv6: ''
+#   peer_port: 100GE3/0/45
+#   peer_switch: JSYCSX_DC_302-A-02-17.EDGE-PE-0-1
+#   peer_vpn: GOBAL
+#   type: port-channel
+# - local_ipv4: ''
+#   local_ipv6: ''
+#   local_port: 100GE3/0/46
+#   local_vpn: GOBAL
+#   peer_ipv4: ''
+#   peer_ipv6: ''
+#   peer_port: 100GE3/0/46
+#   peer_switch: JSYCSX_DC_302-A-02-17.EDGE-PE-0-1
+#   peer_vpn: GOBAL
+#   type: port-channel
+# - local_ipv4: ''
+#   local_ipv6: ''
+#   local_port: 100GE3/0/47
+#   local_vpn: GOBAL
+#   peer_ipv4: ''
+#   peer_ipv6: ''
+#   peer_port: 100GE3/0/47
+#   peer_switch: JSYCSX_DC_302-A-02-17.EDGE-PE-0-1
+#   peer_vpn: GOBAL
+#   type: port-channel
+# - local_ipv4: ''
+#   local_ipv6: ''
+#   local_port: 100GE3/0/48
+#   local_vpn: GOBAL
+#   peer_ipv4: ''
+#   peer_ipv6: ''
+#   peer_port: 100GE3/0/48
+#   peer_switch: JSYCSX_DC_302-A-02-17.EDGE-PE-0-1
+#   peer_vpn: GOBAL
+#   type: port-channel
+# - local_ipv4: 9.51.248.90
+#   local_ipv6: FDBD:DC00:46::933:F85A
+#   local_port: Route-Aggregation100
+#   local_vpn: GOBAL
+#   peer_ipv4: 9.51.248.91
+#   peer_ipv6: FDBD:DC00:46::933:F85B
+#   peer_port: Route-Aggregation100
+#   peer_switch: JSYCSX_DC_302-A-02-17.EDGE-PE-0-1
+#   peer_vpn: GOBAL
+#   type: p2p
+# - local_ipv4: 9.51.248.92
+#   local_ipv6: FDBD:DC00:46::933:F85C
+#   local_port: Route-Aggregation100.10
+#   local_vpn: LOCAL_VPN_STEERING
+#   peer_ipv4: 9.51.248.93
+#   peer_ipv6: FDBD:DC00:46::933:F85D
+#   peer_port: Route-Aggregation100.10
+#   peer_switch: JSYCSX_DC_302-A-02-17.EDGE-PE-0-1
+#   peer_vpn: LOCAL_VPN_STEERING
+#   type: p2p
+# - local_ipv4: 9.9.9.8
+#   local_ipv6: FDBD:DC00:9::9:8
+#   local_port: Route-Aggregation100.20
+#   local_vpn: TOB-DCN
+#   peer_ipv4: 9.9.9.9
+#   peer_ipv6: FDBD:DC00:9::9:9
+#   peer_port: Route-Aggregation100.20
+#   peer_switch: JSYCSX_DC_302-A-02-17.EDGE-PE-0-1
+#   peer_vpn: TOB-DCN
+#   type: p2p
+# - local_ipv4: 9.51.248.94
+#   local_ipv6: FDBD:DC00:46::933:F85E
+#   local_port: Route-Aggregation100.30
+#   local_vpn: TI-VPN10-Intranet
+#   peer_ipv4: 9.51.248.95
+#   peer_ipv6: FDBD:DC00:46::933:F85F
+#   peer_port: Route-Aggregation100.30
+#   peer_switch: JSYCSX_DC_302-A-02-17.EDGE-PE-0-1
+#   peer_vpn: TI-VPN10-Intranet
+#   type: p2p
+# - local_ipv4: 9.51.248.96
+#   local_ipv6: FDBD:DC00:46::933:F860
+#   local_port: 100GE2/0/25
+#   local_vpn: GOBAL
+#   peer_ipv4: 9.51.248.97
+#   peer_ipv6: FDBD:DC00:46::933:F861
+#   peer_port: 100GE1/1/3
+#   peer_switch: JSYCSX_DC_302-B-10-30.CDN-EX-ISP-A
+#   peer_vpn: GOBAL
+#   type: p2p
+# - local_ipv4: 9.51.248.98
+#   local_ipv6: FDBD:DC00:46::933:F862
+#   local_port: 100GE3/0/25
+#   local_vpn: GOBAL
+#   peer_ipv4: 9.51.248.99
+#   peer_ipv6: FDBD:DC00:46::933:F863
+#   peer_port: 100GE1/1/3
+#   peer_switch: JSYCSX_DC_302-B-12-30.CDN-EX-ISP-B
+#   peer_vpn: GOBAL
+#   type: p2p
+# - local_ipv4: 9.51.248.104
+#   local_ipv6: FDBD:DC00:46::933:F868
+#   local_port: 100GE2/0/25.500
+#   local_vpn: LOCAL_VPN_STEERING
+#   peer_ipv4: 9.51.248.105
+#   peer_ipv6: FDBD:DC00:46::933:F869
+#   peer_port: 100GE1/1/3.500
+#   peer_switch: JSYCSX_DC_302-B-10-30.CDN-EX-ISP-A
+#   peer_vpn: LOCAL_VPN_STEERING
+#   type: p2p
+# - local_ipv4: 9.51.248.106
+#   local_ipv6: FDBD:DC00:46::933:F86A
+#   local_port: 100GE3/0/25.500
+#   local_vpn: LOCAL_VPN_STEERING
+#   peer_ipv4: 9.51.248.107
+#   peer_ipv6: FDBD:DC00:46::933:F86B
+#   peer_port: 100GE1/1/3.500
+#   peer_switch: JSYCSX_DC_302-B-12-30.CDN-EX-ISP-B
+#   peer_vpn: LOCAL_VPN_STEERING
+#   type: p2p
+# - local_ipv4: 9.51.248.112
+#   local_ipv6: FDBD:DC00:46::933:F870
+#   local_port: 100GE2/0/29
+#   local_vpn: TI-VPN10-Intranet
+#   peer_ipv4: 9.51.248.113
+#   peer_ipv6: FDBD:DC00:46::933:F871
+#   peer_port: 100GE1/1/16
+#   peer_switch: JSYCSX_DC_302-B-10-34.CDN-IN-CORE-A
+#   peer_vpn: TI-VPN10-Intranet
+#   type: p2p
+# - local_ipv4: 9.51.248.114
+#   local_ipv6: FDBD:DC00:46::933:F872
+#   local_port: 100GE2/0/30
+#   local_vpn: TI-VPN10-Intranet
+#   peer_ipv4: 9.51.248.115
+#   peer_ipv6: FDBD:DC00:46::933:F873
+#   peer_port: 100GE1/1/16
+#   peer_switch: JSYCSX_DC_302-B-11-34.CDN-IN-CORE-B
+#   peer_vpn: TI-VPN10-Intranet
+#   type: p2p
+# - local_ipv4: 9.51.248.116
+#   local_ipv6: FDBD:DC00:46::933:F874
+#   local_port: 100GE3/0/29
+#   local_vpn: TI-VPN10-Intranet
+#   peer_ipv4: 9.51.248.117
+#   peer_ipv6: FDBD:DC00:46::933:F875
+#   peer_port: 100GE1/1/16
+#   peer_switch: JSYCSX_DC_302-B-12-34.CDN-IN-CORE-C
+#   peer_vpn: TI-VPN10-Intranet
+#   type: p2p
+# - local_ipv4: 9.51.248.118
+#   local_ipv6: FDBD:DC00:46::933:F876
+#   local_port: 100GE3/0/30
+#   local_vpn: TI-VPN10-Intranet
+#   peer_ipv4: 9.51.248.119
+#   peer_ipv6: FDBD:DC00:46::933:F877
+#   peer_port: 100GE1/1/16
+#   peer_switch: JSYCSX_DC_302-B-13-34.CDN-IN-CORE-D
+#   peer_vpn: TI-VPN10-Intranet
+#   type: p2p
+# - local_ipv4: 9.9.9.10
+#   local_ipv6: FDBD:DC00:9::9:10
+#   local_port: 100GE2/0/29.500
+#   local_vpn: TOB-DCN
+#   peer_ipv4: 9.9.9.11
+#   peer_ipv6: FDBD:DC00:9::9:11
+#   peer_port: 100GE1/1/16.500
+#   peer_switch: JSYCSX_DC_302-B-10-34.CDN-IN-CORE-A
+#   peer_vpn: TOB-DCN
+#   type: p2p
+# - local_ipv4: 9.9.9.12
+#   local_ipv6: FDBD:DC00:9::9:12
+#   local_port: 100GE2/0/30.500
+#   local_vpn: TOB-DCN
+#   peer_ipv4: 9.9.9.13
+#   peer_ipv6: FDBD:DC00:9::9:13
+#   peer_port: 100GE1/1/16.500
+#   peer_switch: JSYCSX_DC_302-B-11-34.CDN-IN-CORE-B
+#   peer_vpn: TOB-DCN
+#   type: p2p
+# - local_ipv4: 9.9.9.14
+#   local_ipv6: FDBD:DC00:9::9:14
+#   local_port: 100GE3/0/29.500
+#   local_vpn: TOB-DCN
+#   peer_ipv4: 9.9.9.15
+#   peer_ipv6: FDBD:DC00:9::9:15
+#   peer_port: 100GE1/1/16.500
+#   peer_switch: JSYCSX_DC_302-B-12-34.CDN-IN-CORE-C
+#   peer_vpn: TOB-DCN
+#   type: p2p
+# - local_ipv4: 9.9.9.16
+#   local_ipv6: FDBD:DC00:9::9:16
+#   local_port: 100GE3/0/30.500
+#   local_vpn: TOB-DCN
+#   peer_ipv4: 9.9.9.17
+#   peer_ipv6: FDBD:DC00:9::9:17
+#   peer_port: 100GE1/1/16.500
+#   peer_switch: JSYCSX_DC_302-B-13-34.CDN-IN-CORE-D
+#   peer_vpn: TOB-DCN
+#   type: p2p
+# - local_ipv4: ''
+#   local_ipv6: ''
+#   local_port: 100GE2/0/21
+#   local_vpn: GOBAL
+#   peer_ipv4: ''
+#   peer_ipv6: ''
+#   peer_port: 100GE1/1/1
+#   peer_switch: JSYCSX_DC_302-A-01-11.EDGE-XSW-0-1
+#   peer_vpn: GOBAL
+#   type: port-channel
+# - local_ipv4: ''
+#   local_ipv6: ''
+#   local_port: 100GE2/0/22
+#   local_vpn: GOBAL
+#   peer_ipv4: ''
+#   peer_ipv6: ''
+#   peer_port: 100GE1/1/2
+#   peer_switch: JSYCSX_DC_302-A-01-11.EDGE-XSW-0-1
+#   peer_vpn: GOBAL
+#   type: port-channel
+# - local_ipv4: ''
+#   local_ipv6: ''
+#   local_port: 100GE3/0/21
+#   local_vpn: GOBAL
+#   peer_ipv4: ''
+#   peer_ipv6: ''
+#   peer_port: 100GE1/1/1
+#   peer_switch: JSYCSX_DC_302-A-02-11.EDGE-XSW-0-2
+#   peer_vpn: GOBAL
+#   type: port-channel
+# - local_ipv4: ''
+#   local_ipv6: ''
+#   local_port: 100GE3/0/22
+#   local_vpn: GOBAL
+#   peer_ipv4: ''
+#   peer_ipv6: ''
+#   peer_port: 100GE1/1/2
+#   peer_switch: JSYCSX_DC_302-A-02-11.EDGE-XSW-0-2
+#   peer_vpn: GOBAL
+#   type: port-channel
+# - local_ipv4: 9.51.248.128
+#   local_ipv6: FDBD:DC00:46::933:F880
+#   local_port: Route-Aggregation200
+#   local_vpn: GOBAL
+#   peer_ipv4: 9.51.248.129
+#   peer_ipv6: FDBD:DC00:46::933:F881
+#   peer_port: Route-Aggregation110
+#   peer_switch: JSYCSX_DC_302-A-01-11.EDGE-XSW-0-1
+#   peer_vpn: GOBAL
+#   type: p2p
+# - local_ipv4: 9.51.248.130
+#   local_ipv6: FDBD:DC00:46::933:F882
+#   local_port: Route-Aggregation200.10
+#   local_vpn: LOCAL_VPN_STEERING
+#   peer_ipv4: 9.51.248.131
+#   peer_ipv6: FDBD:DC00:46::933:F883
+#   peer_port: Route-Aggregation110.10
+#   peer_switch: JSYCSX_DC_302-A-01-11.EDGE-XSW-0-1
+#   peer_vpn: GOBAL
+#   type: p2p
+# - local_ipv4: 9.9.9.26
+#   local_ipv6: FDBD:DC00:9::9:26
+#   local_port: Route-Aggregation200.20
+#   local_vpn: TOB-DCN
+#   peer_ipv4: 9.9.9.27
+#   peer_ipv6: FDBD:DC00:9::9:27
+#   peer_port: Route-Aggregation110.20
+#   peer_switch: JSYCSX_DC_302-A-01-11.EDGE-XSW-0-1
+#   peer_vpn: GOBAL
+#   type: p2p
+# - local_ipv4: 9.51.248.136
+#   local_ipv6: FDBD:DC00:46::933:F888
+#   local_port: Route-Aggregation201
+#   local_vpn: GOBAL
+#   peer_ipv4: 9.51.248.137
+#   peer_ipv6: FDBD:DC00:46::933:F889
+#   peer_port: Route-Aggregation110
+#   peer_switch: JSYCSX_DC_302-A-02-11.EDGE-XSW-0-2
+#   peer_vpn: GOBAL
+#   type: p2p
+# - local_ipv4: 9.51.248.138
+#   local_ipv6: FDBD:DC00:46::933:F88A
+#   local_port: Route-Aggregation201.10
+#   local_vpn: LOCAL_VPN_STEERING
+#   peer_ipv4: 9.51.248.139
+#   peer_ipv6: FDBD:DC00:46::933:F88B
+#   peer_port: Route-Aggregation110.10
+#   peer_switch: JSYCSX_DC_302-A-02-11.EDGE-XSW-0-2
+#   peer_vpn: GOBAL
+#   type: p2p
+# - local_ipv4: 9.9.9.30
+#   local_ipv6: FDBD:DC00:9::9:30
+#   local_port: Route-Aggregation201.20
+#   local_vpn: TOB-DCN
+#   peer_ipv4: 9.9.9.31
+#   peer_ipv6: FDBD:DC00:9::9:31
+#   peer_port: Route-Aggregation110.20
+#   peer_switch: JSYCSX_DC_302-A-02-11.EDGE-XSW-0-2
+#   peer_vpn: GOBAL
+#   type: p2p
+# - local_ipv4: 9.51.248.75
+#   local_ipv6: FDBD:DC00:46::933:F84B
+#   local_port: Route-Aggregation300
+#   local_vpn: GOBAL
+#   peer_ipv4: 9.51.248.74
+#   peer_ipv6: FDBD:DC00:46::933:F84A
+#   peer_port: Port-Channel300
+#   peer_switch: HJJSNJ_D1_310-01-11-02.EX-CORE-A
+#   peer_vpn: GOBAL
+#   type: p2p
+# - local_ipv4: 9.51.248.79
+#   local_ipv6: FDBD:DC00:46::933:F84F
+#   local_port: Route-Aggregation301
+#   local_vpn: GOBAL
+#   peer_ipv4: 9.51.248.78
+#   peer_ipv6: FDBD:DC00:46::933:F84E
+#   peer_port: Port-Channel300
+#   peer_switch: HJJSNJ_D1_320-01-11-02.EX-CORE-B
+#   peer_vpn: GOBAL
+#   type: p2p
+# - local_ipv4: 9.51.248.83
+#   local_ipv6: FDBD:DC00:46::933:F853
+#   local_port: Route-Aggregation300.10
+#   local_vpn: TI-VPN10-Intranet
+#   peer_ipv4: 9.51.248.82
+#   peer_ipv6: FDBD:DC00:46::933:F852
+#   peer_port: Port-Channel300.10
+#   peer_switch: HJJSNJ_D1_310-01-11-02.EX-CORE-A
+#   peer_vpn: TI-VPN10-Intranet
+#   type: p2p
+# - local_ipv4: 9.51.248.87
+#   local_ipv6: FDBD:DC00:46::933:F857
+#   local_port: Route-Aggregation301.10
+#   local_vpn: TI-VPN10-Intranet
+#   peer_ipv4: 9.51.248.86
+#   peer_ipv6: FDBD:DC00:46::933:F856
+#   peer_port: Port-Channel300.10
+#   peer_switch: HJJSNJ_D1_320-01-11-02.EX-CORE-B
+#   peer_vpn: TI-VPN10-Intranet
+#   type: p2p
+# - local_ipv4: 9.9.9.1
+#   local_ipv6: FDBD:DC00:9::9:1
+#   local_port: Route-Aggregation300.20
+#   local_vpn: TOB-DCN
+#   peer_ipv4: 9.9.9.0
+#   peer_ipv6: FDBD:DC00:9::9:0
+#   peer_port: Port-Channel300.20
+#   peer_switch: HJJSNJ_D1_310-01-11-02.EX-CORE-A
+#   peer_vpn: TOB-DCN
+#   type: p2p
+# - local_ipv4: 9.9.9.5
+#   local_ipv6: FDBD:DC00:9::9:5
+#   local_port: Route-Aggregation301.20
+#   local_vpn: TOB-DCN
+#   peer_ipv4: 9.9.9.4
+#   peer_ipv6: FDBD:DC00:9::9:4
+#   peer_port: Port-Channel300.20
+#   peer_switch: HJJSNJ_D1_320-01-11-02.EX-CORE-B
+#   peer_vpn: TOB-DCN
+#   type: p2p
+

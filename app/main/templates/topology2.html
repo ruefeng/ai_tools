@@ -1,0 +1,25 @@
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<div id="main" style="width: 800px; height: 600px;"></div>
+<script type="text/javascript">
+    var myChart = echarts.init(document.getElementById('main'));
+
+    var option = {
+        series: [{
+            type: 'graph',
+            layout: 'force',
+            data: [
+                { name: 'Node 1', id: '1' },
+                { name: 'Node 2', id: '2' },
+                { name: 'Node 3', id: '3' }
+            ],
+            links: [
+                { source: '1', target: '2' },
+                { source: '2', target: '3' },
+                { source: '3', target: '1' }
+            ],
+            // ... 其他配置
+        }]
+    };
+
+    myChart.setOption(option);
+</script>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>vis.js 拓扑图</title>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+</head>
+<body>
+    <div id="mynetwork" style="width: 800px; height: 600px; border: 1px solid lightgray;"></div>
+    <script type="text/javascript">
+        // 1. 准备数据
+        var nodes = new vis.DataSet([
+            {id: 1, label: 'Node 1'},
+            {id: 2, label: 'Node 2'},
+            {id: 3, label: 'Node 3'}
+        ]);
+
+        var edges = new vis.DataSet([
+            {from: 1, to: 2},
+            {from: 2, to: 3},
+            {from: 3, to: 1}
+        ]);
+
+        var data = {
+            nodes: nodes,
+            edges: edges
+        };
+
+        // 2. 配置图表
+        var options = {};
+
+        // 3. 渲染图表
+        var container = document.getElementById('mynetwork');
+        var network = new vis.Network(container, data, options);
+    </script>
+</body>
+</html>

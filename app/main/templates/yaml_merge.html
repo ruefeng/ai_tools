@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}YAML 合并{% endblock %}
+
+{% block content %}
+<div class="banner">YAML 合并</div>
+
+<h1 class="page-title">按 topKey 合并两份 YAML 数据</h1>
+<p class="page-subtitle">
+    系统会智能识别：列表数据自动放入 links 字段，属性数据放在顶层。两个输入框可以随意交换位置，结果相同。
+</p>
+
+<div class="container" spellcheck="false">
+    <div class="column">
+        <div class="header-row">
+            <label for="yaml1-input">YAML 数据 1（链路列表）</label>
+        </div>
+        <textarea id="yaml1-input" placeholder="示例：
+HNZZSX_D1_301-11-09-06.EDGEIGW-0-1:
+  - local_switch: HNZZSX_D1_301-11-09-06.EDGEIGW-0-1
+    local_port: ethernet1
+    peer_switch: HNZZSX_D1_301-08-10-15.EDGE-XSW-0-1"></textarea>
+    </div>
+    <div class="column">
+        <div class="header-row">
+            <label for="yaml2-input">YAML 数据 2（属性数据）</label>
+        </div>
+        <textarea id="yaml2-input" placeholder="示例：
+HNZZSX_D1_301-11-09-06.EDGEIGW-0-1:
+  hostname: HNZZSX_D1_301-11-09-06.EDGEIGW-0-1
+  mgt_ip: 111.6.173.244
+  mgt_gw: 111.6.173.233"></textarea>
+    </div>
+</div>
+
+<div class="header-row" style="margin-top: 20px;">
+    <button id="yaml-merge-btn" type="button">合并 YAML</button>
+</div>
+
+<div class="full-width-textarea" spellcheck="false">
+    <label for="yaml-output">合并结果</label>
+    <textarea id="yaml-output" readonly placeholder="合并结果会出现在这里..."></textarea>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+<script src="{{ url_for('static', filename='js/yaml_merge.js') }}"></script>
+{% endblock %}

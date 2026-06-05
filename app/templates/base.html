@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}主页{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head_extra %}{% endblock %}
+</head>
+<body>
+    <header class="app-header">
+        <div class="app-header__inner">
+            <a href="{{ url_for('index') }}" class="app-brand" aria-label="回到首页">
+                <span class="app-brand__mark">MyApp</span>
+                <span class="app-brand__name">工具箱</span>
+            </a>
+            <nav class="app-nav" aria-label="主导航">
+                <a class="app-nav__link" href="{{ url_for('index') }}">首页</a>
+                <a class="app-nav__link" href="{{ url_for('main.show_generator') }}">配置生成</a>
+                <a class="app-nav__link" href="{{ url_for('main.show_calc') }}">IP 计算</a>
+                <a class="app-nav__link" href="{{ url_for('main.show_text_to_yaml') }}">文本转 YAML</a>
+                <a class="app-nav__link" href="{{ url_for('main.show_yaml_merge') }}">YAML 合并</a>
+                <a class="app-nav__link" href="{{ url_for('main.show_ucore_pe') }}">ucore_pe互联配置生成</a>
+                <a class="app-nav__link" href="{{ url_for('main.show_topology') }}">链路拓扑图</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <div class="app-container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

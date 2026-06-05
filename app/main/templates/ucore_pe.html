@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}ucore_pe互联配置生成{% endblock %}
+
+{% block content %}
+<div class="banner">ucore_pe互联配置生成</div>
+
+<h1 class="page-title">Excel 数据转 YAML 并生成配置</h1>
+<p class="page-subtitle">
+    从 Excel 复制 10 列数据（第一行为表头），转换为 YAML 格式后结合 Jinja2 模板生成配置。
+</p>
+
+<div class="column-full-width" spellcheck="false">
+    <div class="header-row">
+        <label for="ucore-pe-input">Excel 数据输入</label>
+        <button id="ucore-pe-convert-btn" type="button">转 YAML</button>
+    </div>
+    <textarea id="ucore-pe-input" placeholder="示例：
+local_switch local_port local_vpn local_lagid local_ipv4 local_ipv6 peer_switch peer_port peer_vpn peer_ipv4 peer_ipv6 peer_lagid type
+BJWJ_2F_102-J-12-48.UCORE-0-0 Route-Aggregation201 NONE none 9.110.127.84/31 FDBD:DC00:46::96E:7F54/127 BJTZKC_6_M118-B-05-30.CDN-BBONE-PE-A Route-Aggregation100 NONE 9.110.127.85/31 fdbd:dc00:46::96e:7f55/127 none bundle
+BJWJ_2F_102-J-12-48.UCORE-0-0 Route-Aggregation201.10 TI-VPN10-Intranet none 9.110.127.86/31 FDBD:DC00:46::96E:7F56/127 BJTZKC_6_M118-B-05-30.CDN-BBONE-PE-A Route-Aggregation100.10 TI-VPN10-Intranet 9.110.127.87/31 fdbd:dc00:46::96e:7f57/127 none bundle_sub"></textarea>
+</div>
+
+<div class="full-width-textarea" spellcheck="false">
+    <label for="ucore-pe-yaml-output">YAML 数据</label>
+    <textarea id="ucore-pe-yaml-output" readonly placeholder="转换后的 YAML 数据会出现在这里..."></textarea>
+</div>
+
+<div class="container" spellcheck="false">
+    <div class="column middle-column">
+        <div class="header-row">
+            <label for="ucore-pe-template-select">选择 J2 模板</label>
+        </div>
+        <select id="ucore-pe-template-select">
+            <option value="">-- 请选择模板 --</option>
+            {% for file in files %}
+            <option value="{{ file }}">{{ file }}</option>
+            {% endfor %}
+        </select>
+        <label for="ucore-pe-j2-template">J2 模板内容</label>
+        <textarea id="ucore-pe-j2-template"></textarea>
+    </div>
+    
+    <div class="column right-column">
+        <div class="header-row">
+            <label>生成的配置</label>
+            <button id="ucore-pe-generate-btn">配置生成</button>
+        </div>
+        <textarea id="ucore-pe-config-output" readonly></textarea>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+<script src="{{ url_for('static', filename='js/ucore_pe.js') }}"></script>
+{% endblock %}
