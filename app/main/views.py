@@ -10,14 +10,19 @@ import ipaddress
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
-@main_bp.route('/')
-def show_generator():
-    files = []
+
+def list_template_names():
+    names = set()
     if os.path.exists(DATA_DIR):
         for filename in os.listdir(DATA_DIR):
-            if filename.endswith('.yaml'):
-                files.append(os.path.splitext(filename)[0])
-    return render_template('generator.html', files=files)
+            if filename.endswith('.yaml') or filename.endswith('.j2'):
+                names.add(os.path.splitext(filename)[0])
+    return sorted(names)
+
+
+@main_bp.route('/')
+def show_generator():
+    return render_template('generator.html', files=list_template_names())
 
 @main_bp.route('/get_file_content/<filename>')
 def get_file_content(filename):
@@ -101,28 +106,6 @@ def show_yaml_merge():
 @main_bp.route('/topology')
 def show_topology():
     return render_template('topology.html')
-
-
-@main_bp.route('/ucore-pe')
-def show_ucore_pe():
-    files = []
-    if os.path.exists(DATA_DIR):
-        for filename in os.listdir(DATA_DIR):
-            if filename.endswith('.j2'):
-                files.append(filename)
-    return render_template('ucore_pe.html', files=files)
-
-
-@main_bp.route('/get_j2_template/<filename>')
-def get_j2_template(filename):
-    j2_path = os.path.join(DATA_DIR, filename)
-    j2_content = ""
-    
-    if os.path.exists(j2_path):
-        with open(j2_path, 'r', encoding='utf-8') as f:
-            j2_content = f.read()
-    
-    return jsonify(j2_content=j2_content)
 
 
 def calculate_ipv4(cidr):

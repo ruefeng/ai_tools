@@ -11,7 +11,7 @@
     <div class="card-grid" role="list">
         <a class="card" role="listitem" href="{{ url_for('main.show_generator') }}">
             <div class="card__title">配置生成</div>
-            <p class="card__desc">选择 YAML 与 Jinja2 模板，生成渲染后的配置文本。</p>
+            <p class="card__desc">下拉选择 YAML/Jinja2 实例模板（含 ucore_pe 互联模板），生成渲染后的配置文本。</p>
         </a>
 
         <a class="card" role="listitem" href="{{ url_for('main.show_calc') }}">
@@ -27,11 +27,6 @@
         <a class="card" role="listitem" href="{{ url_for('main.show_yaml_merge') }}">
             <div class="card__title">YAML 合并</div>
             <p class="card__desc">输入两份 YAML，按 topKey 合并为一份 YAML 并输出。</p>
-        </a>
-
-        <a class="card" role="listitem" href="{{ url_for('main.show_ucore_pe') }}">
-            <div class="card__title">ucore_pe互联配置生成</div>
-            <p class="card__desc">Excel 10 列数据转 YAML，结合 Jinja2 模板生成配置。</p>
         </a>
 
         <a class="card" role="listitem" href="{{ url_for('main.show_topology') }}">

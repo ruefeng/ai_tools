@@ -52,27 +52,27 @@ function main() {
   const yaml1Input = document.getElementById("yaml1-input");
   const yaml2Input = document.getElementById("yaml2-input");
   const output = document.getElementById("yaml-output");
+  const jsonOutput = document.getElementById("yaml-json-output");
   const btn = document.getElementById("yaml-merge-btn");
 
   function run() {
     try {
-      // 解析 YAML 数据
       const yaml1 = yaml1Input.value.trim() ? window.jsyaml.load(yaml1Input.value) : {};
       const yaml2 = yaml2Input.value.trim() ? window.jsyaml.load(yaml2Input.value) : {};
-      
-      // 合并 YAML
       const merged = mergeYaml(yaml1, yaml2);
-      
-      // 输出合并结果
+
       output.value = window.jsyaml.dump(merged, {
         noRefs: true,
         lineWidth: 120,
         quotingType: '"',
         forceQuotes: false,
-        sortKeys: false,  // 保持键的顺序
+        sortKeys: false,
       });
+      jsonOutput.value = JSON.stringify(merged, null, 2);
     } catch (e) {
-      output.value = `合并失败：${e && e.message ? e.message : String(e)}`;
+      const message = `合并失败：${e && e.message ? e.message : String(e)}`;
+      output.value = message;
+      jsonOutput.value = message;
     }
   }
 
