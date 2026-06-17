@@ -7,14 +7,15 @@
 {% endblock %}
 
 {% block content %}
-<div class="banner">链路拓扑图</div>
+<div class="topology-page">
+    <header class="topology-header">
+        <h1 class="topology-header__title">网络链路拓扑</h1>
+        <p class="topology-header__subtitle">
+            从 Excel / CSV 或粘贴表格导入链路数据，自动生成拓扑图。节点可拖动，位置可保存到浏览器本地。
+        </p>
+    </header>
 
-<h1 class="page-title">网络链路拓扑</h1>
-<p class="page-subtitle">
-    从 Excel / CSV 或粘贴表格导入链路数据，自动生成拓扑图。节点可拖动，位置可保存到浏览器本地。
-</p>
-
-<div class="topology-layout">
+    <div class="topology-layout">
     <aside class="topology-sidebar">
         <section class="topology-panel">
             <h3 class="topology-panel__title">导入链路数据</h3>
@@ -92,6 +93,7 @@ SW-B	Eth1/2	SW-C	Eth1/1	10G	光纤	正常"></textarea>
 
     <div class="topology-canvas-wrap">
         <div id="topology-network" class="topology-network" aria-label="拓扑图画布"></div>
+    </div>
     </div>
 </div>
 {% endblock %}

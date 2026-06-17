@@ -221,6 +221,18 @@
     return true;
   }
 
+  function estimateNodeSize(name) {
+    const label = (name || '').toString();
+    // 粗略估算：英文 13px 字号每个字符约 7px，中文约 13px；边距 10 * 2
+    let charWidth = 0;
+    for (const ch of label) {
+      charWidth += /[\u4e00-\u9fa5\u3000-\u303f\uff00-\uffef]/.test(ch) ? 13 : 7;
+    }
+    const width = Math.max(80, charWidth + 28);
+    const height = 36;
+    return { width, height };
+  }
+
   function buildVisData() {
     const deviceNames = getAllDeviceNames();
     const savedPos = getSavedPositions();
@@ -228,13 +240,28 @@
     let idx = 0;
     const cols = Math.ceil(Math.sqrt(deviceNames.size)) || 1;
 
+    let maxNodeWidth = 120;
+    const sizes = [];
+    deviceNames.forEach((name) => {
+      const size = estimateNodeSize(name);
+      if (size.width > maxNodeWidth) maxNodeWidth = size.width;
+      sizes.push(size);
+    });
+
+    const gridStepX = Math.max(220, maxNodeWidth + 120);
+    const gridStepY = 160;
+
+    let j = 0;
     deviceNames.forEach((name) => {
       const pos = savedPos[name];
+      const size = sizes[j];
       const node = {
         id: name,
         label: name,
         shape: 'box',
-        margin: 10,
+        margin: 12,
+        widthConstraint: { minimum: size.width, maximum: Math.max(size.width, 260) },
+        heightConstraint: { minimum: size.height },
         font: { color: '#e8ecff', size: 13 },
         color: {
           background: '#1e2a4a',
@@ -248,24 +275,49 @@
       } else {
         const row = Math.floor(idx / cols);
         const col = idx % cols;
-        node.x = col * 220;
-        node.y = row * 140;
+        node.x = col * gridStepX;
+        node.y = row * gridStepY;
       }
       nodes.push(node);
       idx += 1;
+      j += 1;
     });
 
-    const edges = links.map((link, i) => ({
-      id: `edge-${edgeIdCounter + i}`,
-      from: link.aDevice,
-      to: link.bDevice,
-      label: buildEdgeLabel(link),
-      title: buildEdgeTitle(link),
-      font: { align: 'middle', size: 11, color: '#b8c0e0', strokeWidth: 0 },
-      color: { color: '#5a6a9a', highlight: '#22d3ee' },
-      smooth: { type: 'curvedCW', roundness: 0.15 },
-      arrows: { to: { enabled: false } },
-    }));
+    const pairIndex = {};
+    const pairCount = {};
+    links.forEach((link) => {
+      const pair = [link.aDevice, link.bDevice].sort().join('||');
+      pairCount[pair] = (pairCount[pair] || 0) + 1;
+    });
+    const edges = links.map((link, i) => {
+      const pair = [link.aDevice, link.bDevice].sort().join('||');
+      const isReversed = pair !== `${link.aDevice}||${link.bDevice}`;
+      const total = pairCount[pair] || 1;
+      const idx = pairIndex[pair] == null ? 0 : pairIndex[pair];
+      pairIndex[pair] = idx + 1;
+
+      let smooth;
+      if (total <= 1) {
+        smooth = { type: 'continuous', roundness: 0 };
+      } else {
+        const offset = (idx - (total - 1) / 2);
+        const baseRoundness = Math.min(0.55, 0.15 + Math.abs(offset) * 0.15);
+        const type = offset < 0 ? 'curvedCCW' : 'curvedCW';
+        smooth = { type, roundness: baseRoundness };
+      }
+
+      return {
+        id: `edge-${edgeIdCounter + i}`,
+        from: link.aDevice,
+        to: link.bDevice,
+        label: buildEdgeLabel(link),
+        title: buildEdgeTitle(link),
+        font: { align: 'middle', size: 11, color: '#b8c0e0', strokeWidth: 0 },
+        color: { color: '#5a6a9a', highlight: '#22d3ee' },
+        smooth,
+        arrows: { to: { enabled: false } },
+      };
+    });
 
     edgeIdCounter += links.length;
     return { nodes, edges };
@@ -279,6 +331,32 @@
   function setStatus(msg, isError) {
     els.status.textContent = msg || '';
     els.status.classList.toggle('topology-status--error', !!isError);
+  }
+
+  function buildPhysicsOptions(hasSavedLayout, nodeList) {
+    let maxNodeWidth = 120;
+    nodeList.forEach((n) => {
+      if (n && n.widthConstraint && n.widthConstraint.minimum) {
+        if (n.widthConstraint.minimum > maxNodeWidth) maxNodeWidth = n.widthConstraint.minimum;
+      }
+    });
+    const nodeCount = nodeList.length;
+    const springLength = Math.max(220, maxNodeWidth + 170);
+    const gravitationalConstant = -1 * Math.max(1600, 1200 + nodeCount * 60 + maxNodeWidth * 4);
+    const centralGravity = 0.15;
+    const iterations = Math.min(600, 150 + nodeCount * 5);
+    return {
+      enabled: !hasSavedLayout,
+      stabilization: { iterations, updateInterval: 50, fit: false },
+      barnesHut: {
+        gravitationalConstant,
+        centralGravity,
+        springLength,
+        springConstant: 0.05,
+        avoidOverlap: 0.4,
+        damping: 0.12,
+      },
+    };
   }
 
   function initNetwork() {
@@ -305,15 +383,7 @@
         hover: true,
         tooltipDelay: 120,
       },
-      physics: {
-        enabled: !hasSavedLayout,
-        stabilization: { iterations: 120 },
-        barnesHut: {
-          gravitationalConstant: -3500,
-          springLength: 180,
-          springConstant: 0.04,
-        },
-      },
+      physics: buildPhysicsOptions(hasSavedLayout, visData.nodes),
       layout: {
         improvedLayout: true,
       },
@@ -324,14 +394,14 @@
     }
     network = new vis.Network(container, { nodes: nodesDataSet, edges: edgesDataSet }, options);
 
-    network.on('dragEnd', () => {
-      if (network.getOptions().physics.enabled) {
-        network.setOptions({ physics: { enabled: false } });
-      }
-    });
+    // 注意：不要再在 dragStart / dragEnd 中调用 network.setOptions 或
+    // nodesDataSet.update，这会破坏 vis-network 内部的拖动状态机，
+    // 导致"节点拖不动 / 松手后还在拖 / 需要双击才能结束拖动"的问题。
+    // 让 vis-network 自己管理节点 / 视图的拖动行为。
 
+    // 初始布局稳定后自动关闭物理引擎，让节点停住。
     network.once('stabilizationIterationsDone', () => {
-      if (!hasSavedLayout) {
+      if (network && network.getOptions().physics.enabled) {
         network.setOptions({ physics: { enabled: false } });
       }
     });
@@ -383,11 +453,62 @@
     return state;
   }
 
+  function isLinkLike(obj) {
+    if (!obj || typeof obj !== 'object') return false;
+    const has = (k) => Object.prototype.hasOwnProperty.call(obj, k);
+    return (has('aDevice') && has('bDevice')) || (has('source') && has('target'));
+  }
+
+  function normalizeLink(obj) {
+    return {
+      aDevice: (obj.aDevice || obj.source || '').toString(),
+      aPort: (obj.aPort || obj.sourcePort || '').toString(),
+      bDevice: (obj.bDevice || obj.target || '').toString(),
+      bPort: (obj.bPort || obj.targetPort || '').toString(),
+      attr1: (obj.attr1 || obj.attr_1 || '').toString(),
+      attr2: (obj.attr2 || obj.attr_2 || '').toString(),
+      attr3: (obj.attr3 || obj.attr_3 || '').toString(),
+    };
+  }
+
+  function extractLinksFromJson(state) {
+    // 1) 本页面自己导出的格式：{ links: [...], extraNodes: [...], positions: {...} }
+    if (Array.isArray(state.links) && state.links.every(isLinkLike)) {
+      return state.links.map(normalizeLink);
+    }
+    // 2) 数组本身就是链路
+    if (Array.isArray(state) && state.every(isLinkLike)) {
+      return state.map(normalizeLink);
+    }
+    // 3) 外部常见格式：{ result: [...] } / { data: [...] } / { links: [...] }
+    const candidates = [state.result, state.data, state.links, state.records, state.items];
+    for (const list of candidates) {
+      if (Array.isArray(list) && list.every(isLinkLike)) {
+        return list.map(normalizeLink);
+      }
+    }
+    // 4) 单层对象也可能是一条链路
+    if (isLinkLike(state)) {
+      return [normalizeLink(state)];
+    }
+    return null;
+  }
+
   function loadFullState(state) {
-    links = Array.isArray(state.links) ? state.links : [];
-    extraNodes = new Set(Array.isArray(state.extraNodes) ? state.extraNodes : []);
-    if (state.positions) {
+    const recognized = extractLinksFromJson(state);
+    if (recognized) {
+      links = recognized;
+    } else {
+      links = [];
+    }
+    const extraList = Array.isArray(state.extraNodes) ? state.extraNodes : [];
+    extraNodes = new Set(extraList.filter((n) => typeof n === 'string' && n));
+    const hasPositions =
+      state.positions && typeof state.positions === 'object' && Object.keys(state.positions).length > 0;
+    if (hasPositions) {
       localStorage.setItem(POSITIONS_KEY, JSON.stringify(state.positions));
+    } else {
+      localStorage.removeItem(POSITIONS_KEY);
     }
     edgeIdCounter = links.length + 1;
     if (els.paste && links.length) {
@@ -399,6 +520,9 @@
             .join('\t')
       );
       els.paste.value = [header, ...rows].join('\n');
+    }
+    if (!recognized) {
+      setStatus('JSON 已解析，但没有识别到可用的链路字段', true);
     }
     updateStats();
     refreshGraph();
@@ -498,8 +622,18 @@
   els.autoLayoutBtn.addEventListener('click', () => {
     if (!network) return;
     localStorage.removeItem(POSITIONS_KEY);
+    if (nodesDataSet) {
+      // 解除手动拖动导致的 fixed，允许自动布局重新排布
+      const reset = [];
+      nodesDataSet.forEach((n) => {
+        if (n && n.fixed && (n.fixed.x || n.fixed.y)) {
+          reset.push({ id: n.id, fixed: { x: false, y: false } });
+        }
+      });
+      if (reset.length) nodesDataSet.update(reset);
+    }
     network.setOptions({ physics: { enabled: true } });
-    network.stabilize(150);
+    network.stabilize(200);
     network.once('stabilizationIterationsDone', () => {
       network.setOptions({ physics: { enabled: false } });
       setStatus('自动布局完成');

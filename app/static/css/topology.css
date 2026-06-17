@@ -1,8 +1,50 @@
-.topology-layout {
+/* 拓扑页：尽可能占满可用视口 */
+.app-main {
+    padding: 14px 0 14px;
+}
+
+.topology-page {
     display: flex;
-    gap: 20px;
-    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+    /* 顶部 app-header 大约 70px，再去掉 28px padding */
+    height: calc(100vh - 70px - 28px);
+    min-height: calc(100vh - 70px - 28px);
+}
+
+.topology-header {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-start;
+    gap: 14px;
     flex-wrap: wrap;
+    padding: 10px 16px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(109,124,255,.20), rgba(34,211,238,.10));
+    box-shadow: var(--shadow);
+}
+
+.topology-header__title {
+    margin: 0;
+    font-size: 1.2rem;
+    letter-spacing: 0.2px;
+}
+
+.topology-header__subtitle {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.topology-layout {
+    flex: 1 1 auto;
+    display: flex;
+    gap: 14px;
+    align-items: stretch;
+    min-height: 0; /* 关键：允许子 canvas 收缩/填满剩余高度 */
 }
 
 .topology-sidebar {
@@ -10,7 +52,17 @@
     max-width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
+    overflow-y: auto;
+    padding-right: 2px;
+}
+
+.topology-sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+.topology-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
 }
 
 .topology-panel {
@@ -124,19 +176,27 @@
 }
 
 .topology-canvas-wrap {
-    flex: 1;
-    min-width: min(100%, 520px);
-    min-height: 560px;
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    /* 显式声明高度为父容器的全部剩余高度 */
+    height: 100%;
+    display: flex;
 }
 
 .topology-network {
     width: 100%;
-    height: min(78vh, 720px);
-    min-height: 520px;
+    height: 100%;
+    min-height: 420px;
     border: 1px solid var(--border);
     border-radius: 16px;
     background: rgba(0, 0, 0, 0.28);
     box-shadow: var(--shadow);
+    /* 防止拖拽时浏览器原生行为干扰 */
+    outline: none;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: none;
 }
 
 .topology-stats {
@@ -157,16 +217,23 @@
 }
 
 @media (max-width: 900px) {
+    .topology-page {
+        height: auto;
+        min-height: auto;
+    }
+    .topology-layout {
+        flex-direction: column;
+        min-height: 0;
+    }
     .topology-sidebar {
         flex: 1 1 100%;
+        overflow: visible;
     }
-
     .topology-canvas-wrap {
-        min-height: 420px;
+        min-height: 520px;
+        height: 65vh;
     }
-
     .topology-network {
-        min-height: 400px;
-        height: 60vh;
+        min-height: 500px;
     }
 }
