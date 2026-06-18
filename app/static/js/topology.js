@@ -262,11 +262,11 @@
         margin: 12,
         widthConstraint: { minimum: size.width, maximum: Math.max(size.width, 260) },
         heightConstraint: { minimum: size.height },
-        font: { color: '#e8ecff', size: 13 },
+        font: { color: '#11375f', size: 13 },
         color: {
-          background: '#1e2a4a',
-          border: '#6d7cff',
-          highlight: { background: '#2a3a66', border: '#22d3ee' },
+          background: '#f7fbff',
+          border: '#1769ff',
+          highlight: { background: '#e8f6ff', border: '#00b8d9' },
         },
       };
       if (pos) {
@@ -312,8 +312,8 @@
         to: link.bDevice,
         label: buildEdgeLabel(link),
         title: buildEdgeTitle(link),
-        font: { align: 'middle', size: 11, color: '#b8c0e0', strokeWidth: 0 },
-        color: { color: '#5a6a9a', highlight: '#22d3ee' },
+        font: { align: 'middle', size: 11, color: '#44627d', strokeWidth: 2, strokeColor: '#ffffff' },
+        color: { color: '#7aa8cf', highlight: '#00b8d9' },
         smooth,
         arrows: { to: { enabled: false } },
       };
