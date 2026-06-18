@@ -1,25 +1,47 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
 # Virtual environments
 .venv/
 venv/
 env/
+ENV/
 
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-.Python
-*.egg-info/
-dist/
+# Build and package artifacts
 build/
+dist/
+*.egg-info/
+*.egg
 
-# IDE / OS
+# Flask and local runtime files
+.env
+.env.*
+!.env.example
+instance/*.db
+instance/*.sqlite
+instance/*.sqlite3
+*.log
+
+# Generated downloads and temporary data
+downloads/
+tmp/
+temp/
+*.zip
+
+# IDE and editor files
 .idea/
 .vscode/
 *.swp
+*.swo
+
+# OS files
 .DS_Store
 Thumbs.db
-
-# Flask / local
-.env
-*.log
+desktop.ini
