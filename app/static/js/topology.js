@@ -20,7 +20,6 @@
   let edgesDataSet = null;
 
   const els = {
-    paste: document.getElementById('topology-paste-input'),
     file: document.getElementById('topology-file-input'),
     importBtn: document.getElementById('topology-import-btn'),
     clearDataBtn: document.getElementById('topology-clear-data-btn'),
@@ -511,16 +510,6 @@
       localStorage.removeItem(POSITIONS_KEY);
     }
     edgeIdCounter = links.length + 1;
-    if (els.paste && links.length) {
-      const header = 'A端设备\tA端端口\tB端设备\tB端端口\t属性1\t属性2\t属性3';
-      const rows = links.map(
-        (l) =>
-          [l.aDevice, l.aPort, l.bDevice, l.bPort, l.attr1, l.attr2, l.attr3]
-            .map((v) => v || '')
-            .join('\t')
-      );
-      els.paste.value = [header, ...rows].join('\n');
-    }
     if (!recognized) {
       setStatus('JSON 已解析，但没有识别到可用的链路字段', true);
     }
@@ -529,29 +518,26 @@
   }
 
   async function handleImport() {
-    let imported = [];
-
-    if (els.file.files && els.file.files[0]) {
-      const file = els.file.files[0];
-      const name = file.name.toLowerCase();
-      try {
-        if (name.endsWith('.csv') || name.endsWith('.tsv') || name.endsWith('.txt')) {
-          imported = await readCsvFile(file);
-        } else {
-          imported = await readExcelFile(file);
-        }
-      } catch (err) {
-        setStatus('文件解析失败：' + err.message, true);
-        return;
-      }
+    if (!els.file.files || !els.file.files[0]) {
+      setStatus('请先选择一个文件（支持 xlsx / xls / csv / tsv / txt）', true);
+      return;
     }
-
-    if (imported.length === 0 && els.paste.value.trim()) {
-      imported = parseTextToLinks(els.paste.value);
+    let imported = [];
+    const file = els.file.files[0];
+    const name = file.name.toLowerCase();
+    try {
+      if (name.endsWith('.csv') || name.endsWith('.tsv') || name.endsWith('.txt')) {
+        imported = await readCsvFile(file);
+      } else {
+        imported = await readExcelFile(file);
+      }
+    } catch (err) {
+      setStatus('文件解析失败：' + err.message, true);
+      return;
     }
 
     if (imported.length === 0) {
-      setStatus('未解析到有效链路，请上传文件或粘贴数据', true);
+      setStatus('文件中没有解析到有效链路，请检查列顺序（A端设备、A端端口、B端设备、B端端口、属性1-3）', true);
       return;
     }
 
@@ -569,7 +555,6 @@
     links = [];
     extraNodes.clear();
     edgeIdCounter = 1;
-    if (els.paste) els.paste.value = '';
     if (els.file) els.file.value = '';
     updateStats();
     if (network) {

@@ -1,0 +1,4 @@
+hostname: "ucore-BJS-01"
+role: ucore
+edge_datacenter: "BJS"
+edgepe_asn: "64543"

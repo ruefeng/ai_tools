@@ -10,7 +10,8 @@
     系统会智能识别：列表数据自动放入 links 字段，属性数据放在顶层。两个输入框可以随意交换位置，结果相同。
 </p>
 
-<div class="container" spellcheck="false">
+<!-- 两个 YAML 输入框（最上方）+ 合并按钮 -->
+<div class="container yaml-merge-inputs" spellcheck="false">
     <div class="column">
         <div class="header-row">
             <label for="yaml1-input">YAML 数据 1（链路列表）</label>
@@ -37,14 +38,21 @@ HNZZSX_D1_301-11-09-06.EDGEIGW-0-1:
     <button id="yaml-merge-btn" type="button">合并 YAML</button>
 </div>
 
-<div class="full-width-textarea" spellcheck="false">
-    <label for="yaml-output">合并结果（YAML）</label>
-    <textarea id="yaml-output" readonly placeholder="合并后的 YAML 会出现在这里..."></textarea>
-</div>
+<!-- 最下方：合并后的 YAML 与 JSON 左右并列 -->
+<div class="yaml-json-row" spellcheck="false">
+    <div class="yaml-json-column">
+        <div class="header-row">
+            <label for="yaml-output">合并结果（YAML）</label>
+        </div>
+        <textarea id="yaml-output" readonly placeholder="合并后的 YAML 会出现在这里..."></textarea>
+    </div>
 
-<div class="full-width-textarea" spellcheck="false">
-    <label for="yaml-json-output">合并结果（JSON）</label>
-    <textarea id="yaml-json-output" readonly placeholder="合并后的 JSON 会出现在这里..."></textarea>
+    <div class="yaml-json-column">
+        <div class="header-row">
+            <label for="yaml-json-output">合并结果（JSON）</label>
+        </div>
+        <textarea id="yaml-json-output" readonly placeholder="合并后的 JSON 会出现在这里..."></textarea>
+    </div>
 </div>
 {% endblock %}
 

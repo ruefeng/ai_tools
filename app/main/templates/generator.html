@@ -5,39 +5,48 @@
 {% block content %}
 <div class="banner">配置生成页面</div>
 
-<div class="column-full-width" spellcheck="false">
-    <label for="template-select">选择实例模板</label>
-    <select id="template-select">
-        <option value="">-- 请选择模板 --</option>
-        {% for file in files %}
-        <option value="{{ file }}">{{ file }}</option>
-        {% endfor %}
-    </select>
+<!-- 上方下拉仅用于加载示例，不会锁定下方的输入框。用户可自由编辑 YAML 与模板后直接生成配置。 -->
+<div class="row-select" spellcheck="false">
+    <div class="select-block">
+        <label for="mode-select">配置生成场景(自动带出yaml示例)</label>
+        <select id="mode-select">
+            <option value="single">一份yaml搭配一份jinja2</option>
+            <option value="scenario">一份yaml搭配多份jinja2</option>
+        </select>
+    </div>
+
+    <div class="select-block">
+        <label for="second-select" id="second-select-label">选择示例</label>
+        <select id="second-select">
+            <option value="">-- 请选择 --</option>
+        </select>
+    </div>
 </div>
 
+<!-- YAML + 模板 区域 (完全可编辑，不依赖下拉) -->
 <div class="container" spellcheck="false">
     <div class="column middle-column">
-        <label for="yaml-data-textarea">YAML 数据</label>
-        <textarea id="yaml-data-textarea" placeholder="选择模板后自动加载示例 YAML，也可手动粘贴或编辑..."></textarea>
+        <label for="yaml-data-textarea">YAML数据(可自由编辑)</label>
+        <textarea id="yaml-data-textarea" placeholder="在此粘贴或手动输入 YAML 数据..."></textarea>
     </div>
 
-    <div class="column right-column">
+    <div class="column right-column" id="template-column">
         <div class="header-row">
-            <label for="j2-template-textarea">配置模板</label>
-            <button id="generate-button">开始生成配置</button>
+            <label for="j2-template-textarea">Jinja2模板(可自由编辑，一对多场景下此内容无效)</label>
+            <button id="generate-button">生成配置</button>
         </div>
-        <textarea id="j2-template-textarea" placeholder="选择模板后自动加载 Jinja2 模板..."></textarea>
+        <textarea id="j2-template-textarea" placeholder="在此输入 Jinja2 模板，或从上方下拉加载示例模板..."></textarea>
+        <div id="scenario-info" class="scenario-info" style="display:none;"></div>
+        <div id="mode-indicator" class="mode-indicator"></div>
     </div>
 </div>
 
 <div class="full-width-textarea">
-    <label for="generated-config-textarea">生成的配置</label>
+    <div class="header-row">
+        <label for="generated-config-textarea">生成配置展示</label>
+        <button id="download-button" disabled>下载为ZIP</button>
+    </div>
     <textarea id="generated-config-textarea" readonly></textarea>
-</div>
-
-<div class="full-width-textarea">
-    <label for="json-data-textarea">发向后端的 JSON 数据</label>
-    <textarea id="json-data-textarea" readonly></textarea>
 </div>
 {% endblock %}
 

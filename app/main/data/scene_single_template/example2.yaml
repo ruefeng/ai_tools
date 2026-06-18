@@ -1,0 +1,12 @@
+router1:
+  links:
+    - port: hge1/0/1
+      description: 111
+    - port: hge1/0/2
+      description: 112
+router2:
+  links:
+    - port: hge1/0/1
+      description: 111
+    - port: hge1/0/2
+      description: 112

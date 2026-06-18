@@ -1,48 +1,42 @@
 {% extends "base.html" %}
 
-{% block title %}文本转 YAML{% endblock %}
+{% block title %}YAML / JSON 互转{% endblock %}
 
 {% block content %}
-<div class="banner">文本转 YAML</div>
+<div class="banner">YAML / JSON 互转</div>
 
-<h1 class="page-title">Excel 数据转 YAML</h1>
 <p class="page-subtitle">
-    从 Excel 复制多行数据，列之间用空白字符分隔。第一行作为表头（key），相同第一列值的行聚合为一个列表，最终格式为字典。
+    上方为文本输入框（按行/按空白分列；第一行为 key），点击"转换为 YAML/JSON"或输入后会同时写入下方两个输出框。<br>
+    下方 YAML 与 JSON 两个输出框也可直接粘贴/输入对应格式：在任意一个框输入，另一个会自动清空并渲染。
 </p>
 
+<!-- 顶部：文本输入框放在最上方 -->
 <div class="column-full-width" spellcheck="false">
     <div class="header-row">
-        <label for="t2y-input">输入（按行/空白分列）</label>
-        <button id="t2y-convert-btn" type="button">转换</button>
+        <label for="t2y-input">文本输入（按行/按空白分列；第一行为 key）</label>
+        <button id="t2y-convert-btn" type="button">转换为 YAML/JSON</button>
     </div>
-    <textarea id="t2y-input" placeholder="示例1：
-device ip vlan
-siteA 10.0.0.1 10
-siteB 10.0.0.2 20
-siteA 10.0.0.3 30
-
-转换结果1：
-siteA:
-  - device: siteA
-    ip: 10.0.0.1
-    vlan: 10
-  - device: siteA
-    ip: 10.0.0.3
-    vlan: 30
-siteB:
-  - device: siteB
-    ip: 10.0.0.2
-    vlan: 20"></textarea>
+    <textarea id="t2y-input" placeholder="示例：&#10;device ip vlan&#10;siteA 10.0.0.1 10&#10;siteB 10.0.0.2 20&#10;siteA 10.0.0.3 30"></textarea>
+    <div id="t2y-input-msg" class="field-message" aria-live="polite"></div>
 </div>
 
-<div class="full-width-textarea" spellcheck="false">
-    <label for="t2y-output">输出 YAML</label>
-    <textarea id="t2y-output" readonly placeholder="转换结果会出现在这里..."></textarea>
-</div>
+<!-- 下方：YAML + JSON 左右并排 -->
+<div class="yaml-json-row" spellcheck="false">
+    <div class="yaml-json-column">
+        <div class="header-row">
+            <label for="t2y-yaml">YAML</label>
+        </div>
+        <textarea id="t2y-yaml" placeholder="在此输入 YAML...&#10;例如：&#10;name: siteA&#10;ip: 10.0.0.1&#10;vlan: 10"></textarea>
+        <div id="t2y-yaml-msg" class="field-message" aria-live="polite"></div>
+    </div>
 
-<div class="full-width-textarea" spellcheck="false">
-    <label for="t2y-json-output">输出 JSON</label>
-    <textarea id="t2y-json-output" readonly placeholder="对应的 JSON 数据会出现在这里..."></textarea>
+    <div class="yaml-json-column">
+        <div class="header-row">
+            <label for="t2y-json">JSON</label>
+        </div>
+        <textarea id="t2y-json" placeholder='在此输入 JSON...&#10;例如：&#10;{&#10;  "name": "siteA",&#10;  "ip": "10.0.0.1",&#10;  "vlan": 10&#10;}'></textarea>
+        <div id="t2y-json-msg" class="field-message" aria-live="polite"></div>
+    </div>
 </div>
 {% endblock %}
 
@@ -50,4 +44,3 @@ siteB:
 <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 <script src="{{ url_for('static', filename='js/text_to_yaml.js') }}"></script>
 {% endblock %}
-

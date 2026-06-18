@@ -11,27 +11,27 @@
     <div class="card-grid" role="list">
         <a class="card" role="listitem" href="{{ url_for('main.show_generator') }}">
             <div class="card__title">配置生成</div>
-            <p class="card__desc">下拉选择 YAML/Jinja2 实例模板（含 ucore_pe 互联模板），生成渲染后的配置文本。</p>
+            <p class="card__desc">输入或下拉选择YAML/Jinja2,渲染生成配置文本,支持下载为ZIP。</p>
         </a>
 
         <a class="card" role="listitem" href="{{ url_for('main.show_calc') }}">
-            <div class="card__title">IP 计算</div>
-            <p class="card__desc">批量输入 IPv4/IPv6 CIDR，计算对端地址并输出。</p>
+            <div class="card__title">互联IP计算</div>
+            <p class="card__desc">批量输入P2P类型IPv4/IPv6CIDR,计算出对端地址并格式化输出。</p>
         </a>
 
         <a class="card" role="listitem" href="{{ url_for('main.show_text_to_yaml') }}">
-            <div class="card__title">文本转 YAML</div>
-            <p class="card__desc">按空白分列，使用第一列作为 topKey，转换为 YAML 并输出。</p>
+            <div class="card__title">文本转YAML和JSON</div>
+            <p class="card__desc">复制输入EXCEL中的文本,转为YAML和JSON格式。</p>
         </a>
 
         <a class="card" role="listitem" href="{{ url_for('main.show_yaml_merge') }}">
-            <div class="card__title">YAML 合并</div>
-            <p class="card__desc">输入两份 YAML，按 topKey 合并为一份 YAML 并输出。</p>
+            <div class="card__title">YAML数据块合并</div>
+            <p class="card__desc">输入两份YAML,按TopKey合并为一份,同时输出YAML和JSON格式。</p>
         </a>
 
         <a class="card" role="listitem" href="{{ url_for('main.show_topology') }}">
-            <div class="card__title">链路拓扑图</div>
-            <p class="card__desc">从 Excel 导入链路数据，生成交互式拓扑图，支持拖动节点与保存布局。</p>
+            <div class="card__title">拓扑生成</div>
+            <p class="card__desc">导入EXCEL/JSON格式的链路数据,生成拓扑图,支持拖动节点与保存布局。</p>
         </a>
     </div>
 {% endblock %}

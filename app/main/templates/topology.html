@@ -19,12 +19,8 @@
     <aside class="topology-sidebar">
         <section class="topology-panel">
             <h3 class="topology-panel__title">导入链路数据</h3>
-            <p class="topology-hint">每行一条链路：A端设备、A端端口、B端设备、B端端口、属性1、属性2、属性3（首行可为表头）</p>
+            <p class="topology-hint">从Excel(.xlsx/.xls/.csv/.tsv)文件导入,首行可为表头</p>
             <input type="file" id="topology-file-input" accept=".xlsx,.xls,.csv,.tsv,.txt" class="topology-file-input">
-            <textarea id="topology-paste-input" class="topology-paste" spellcheck="false" placeholder="示例（Tab 或空格分隔，可从 Excel 直接粘贴）：
-A端设备	A端端口	B端设备	B端端口	属性1	属性2	属性3
-SW-A	Eth1/1	SW-B	Eth1/1	10G	光纤	正常
-SW-B	Eth1/2	SW-C	Eth1/1	10G	光纤	正常"></textarea>
             <div class="topology-actions">
                 <button type="button" id="topology-import-btn">生成拓扑图</button>
                 <button type="button" id="topology-clear-data-btn" class="topology-btn--muted">清空数据</button>

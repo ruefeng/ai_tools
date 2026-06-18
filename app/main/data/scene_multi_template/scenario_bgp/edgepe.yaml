@@ -1,0 +1,5 @@
+hostname: "edgepe-BJS-01"
+role: edgepe
+edge_datacenter: "BJS"
+asn: "64543"
+model: "h3c"
