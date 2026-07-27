@@ -19,6 +19,7 @@ from .services.generator_service import (
     build_zip_bytes,
 )
 from .services.ip_calc_service import batch_calculate
+from .services.ip_scan_service import scan_cidr, scan_multiple
 from .utils.data_io import read_single_template_file
 
 
@@ -114,6 +115,26 @@ def show_text_to_yaml():
 @main_bp.route('/yaml-merge')
 def show_yaml_merge():
     return render_template('yaml_merge.html')
+
+
+# ---------------------------------------------------------------------------
+# IP扫描（ip_scan.html）
+# ---------------------------------------------------------------------------
+@main_bp.route('/ip-scan')
+def show_ip_scan():
+    return render_template('ip_scan.html')
+
+
+@main_bp.route('/scan-ip', methods=['POST'])
+def scan_ip():
+    data = request.get_json() or {}
+    cidr = data.get('cidr', '') or ''
+    if not cidr:
+        return jsonify(error='请输入IP地址段'), 400
+    result = scan_multiple(cidr)
+    if 'error' in result:
+        return jsonify(result), 400
+    return jsonify(result)
 
 
 # ---------------------------------------------------------------------------

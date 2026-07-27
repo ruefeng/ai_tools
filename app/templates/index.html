@@ -29,6 +29,11 @@
             <p class="card__desc">输入两份YAML,按TopKey合并为一份,同时输出YAML和JSON格式。</p>
         </a>
 
+        <a class="card" role="listitem" href="{{ url_for('main.show_ip_scan') }}">
+            <div class="card__title">IP段扫描</div>
+            <p class="card__desc">输入带掩码的IP地址段,自动拆分/24段并扫描存活IP,支持多行多段输入。</p>
+        </a>
+
         <a class="card" role="listitem" href="{{ url_for('main.show_topology') }}">
             <div class="card__title">拓扑生成</div>
             <p class="card__desc">导入EXCEL/JSON格式的链路数据,生成拓扑图,支持拖动节点与保存布局。</p>

@@ -1,0 +1,248 @@
+/* IP扫描页面样式 - 三列布局 */
+
+/* 三列布局 */
+.ip-scan-layout {
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+}
+
+.ip-scan-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.ip-scan-left {
+    flex: 2;
+    min-width: 320px;
+}
+
+.ip-scan-middle {
+    flex: 2;
+    min-width: 280px;
+}
+
+.ip-scan-right {
+    flex: 2;
+    min-width: 280px;
+}
+
+@media (max-width: 1100px) {
+    .ip-scan-layout {
+        flex-wrap: wrap;
+    }
+    .ip-scan-left {
+        flex: 100%;
+        min-width: 100%;
+    }
+    .ip-scan-middle,
+    .ip-scan-right {
+        flex: 1;
+        min-width: 280px;
+    }
+}
+
+@media (max-width: 700px) {
+    .ip-scan-middle,
+    .ip-scan-right {
+        flex: 100%;
+        min-width: 100%;
+    }
+}
+
+/* 状态提示 */
+.scan-status {
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    flex: 1;
+}
+
+.scan-status-info {
+    background: rgba(23, 105, 255, .10);
+    color: #1565c0;
+    border: 1px solid rgba(23, 105, 255, .20);
+}
+
+.scan-status-success {
+    background: rgba(22, 217, 164, .10);
+    color: #1b9a59;
+    border: 1px solid rgba(22, 217, 164, .20);
+}
+
+.scan-status-error {
+    background: rgba(229, 72, 77, .10);
+    color: #c62828;
+    border: 1px solid rgba(229, 72, 77, .20);
+}
+
+/* 汇总区 - 紧凑布局 */
+.scan-summary {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.summary-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.9), rgba(247,251,255,.78));
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(38, 104, 164, .08);
+}
+
+.summary-item .summary-label {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.summary-item .summary-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--brand);
+}
+
+/* 扫描卡片 */
+.ip-scan-card {
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.9), rgba(247,251,255,.78));
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    height: calc(70vh - 40px);
+    min-height: 360px;
+}
+
+.ip-scan-card label {
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #13385f;
+}
+
+.ip-scan-segment-list,
+.ip-scan-ip-list {
+    flex: 1;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background:
+        linear-gradient(rgba(23, 105, 255, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 184, 217, .035) 1px, transparent 1px),
+        rgba(255, 255, 255, .88);
+    background-size: 24px 24px;
+    padding: 8px 10px;
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.ip-scan-segment-list::-webkit-scrollbar,
+.ip-scan-ip-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.ip-scan-segment-list::-webkit-scrollbar-thumb,
+.ip-scan-ip-list::-webkit-scrollbar-thumb {
+    background: rgba(23, 105, 255, .22);
+    border-radius: 4px;
+    border: 2px solid #ffffff;
+}
+
+.ip-scan-empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 30px 0;
+    font-size: 12px;
+}
+
+/* 网段项 */
+.segment-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 4px;
+    cursor: pointer;
+    transition: background .15s ease;
+    border-radius: 4px;
+    border-bottom: 1px solid rgba(57, 116, 181, .08);
+}
+
+.segment-item:last-child {
+    border-bottom: none;
+}
+
+.segment-item:hover {
+    background: rgba(23, 105, 255, .06);
+}
+
+.segment-item.is-selected {
+    background: rgba(23, 105, 255, .12);
+}
+
+.segment-item-toggle {
+    font-size: 9px;
+    color: var(--muted);
+    width: 12px;
+    text-align: center;
+    transition: transform .15s ease;
+}
+
+.segment-item.is-selected .segment-item-toggle {
+    transform: rotate(90deg);
+    color: var(--brand);
+}
+
+.segment-item-name {
+    flex: 1;
+    font-size: 12px;
+    color: #102033;
+    font-weight: 500;
+    word-break: break-all;
+}
+
+.segment-item-count {
+    font-size: 11px;
+    color: var(--brand);
+    font-weight: 600;
+    padding: 1px 6px;
+    background: rgba(23, 105, 255, .10);
+    border-radius: 3px;
+}
+
+/* IP列表项 - 每行一个IP */
+.ip-list-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 4px;
+    border-bottom: 1px solid rgba(57, 116, 181, .06);
+    font-size: 13px;
+    color: #1565c0;
+    cursor: pointer;
+    transition: background .15s ease;
+    border-radius: 3px;
+}
+
+.ip-list-item:last-child {
+    border-bottom: none;
+}
+
+.ip-list-item:hover {
+    background: rgba(23, 105, 255, .08);
+}
+
+.ip-list-item::before {
+    content: '•';
+    font-size: 10px;
+    color: var(--brand);
+    width: 12px;
+    text-align: center;
+}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}IP段扫描{% endblock %}
+
+{% block head_extra %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ip_scan.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="banner">IP段拆分与扫描</div>
+
+    <p class="page-subtitle">输入带掩码的IP地址段，支持多行输入（每行一个CIDR）。系统会自动拆分并扫描存活IP。</p>
+
+    <div class="ip-scan-layout">
+        <div class="ip-scan-column ip-scan-left">
+            <div class="column-full-width">
+                <label for="scan-input">IP地址段（支持多行输入，每行一个）</label>
+                <textarea id="scan-input" placeholder="192.168.1.0/24&#10;10.0.0.0/23&#10;172.16.0.0/16" rows="12"></textarea>
+                <div style="margin-top: 12px; display: flex; gap: 12px;">
+                    <button id="scan-btn">开始扫描</button>
+                    <div id="scan-status" class="scan-status" style="flex: 1;"></div>
+                </div>
+            </div>
+
+            <div class="scan-summary">
+                <div class="summary-item">
+                    <span class="summary-label">拆分段数</span>
+                    <span class="summary-value" id="summary-subnet-count">0</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">存活IP数</span>
+                    <span class="summary-value" id="summary-alive-count">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ip-scan-column ip-scan-middle">
+            <div class="ip-scan-card">
+                <label>拆分后的网段</label>
+                <div class="ip-scan-segment-list">
+                    <div class="ip-scan-empty">网段列表将显示在这里</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ip-scan-column ip-scan-right">
+            <div class="ip-scan-card">
+                <label>存活IP地址</label>
+                <div class="ip-scan-ip-list">
+                    <div class="ip-scan-empty">点击左侧网段查看存活IP</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <template id="segment-item-template">
+        <div class="segment-item" data-subnet="">
+            <span class="segment-item-toggle">▶</span>
+            <span class="segment-item-name"></span>
+            <span class="segment-item-count"></span>
+        </div>
+    </template>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/ip_scan.js') }}"></script>
+{% endblock %}
