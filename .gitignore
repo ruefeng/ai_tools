@@ -1,25 +1,119 @@
-# Virtual environments
-.venv/
-venv/
-env/
+# ============================================================================
+# Python 运行产物
+# ============================================================================
 
-# Python
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*$py.class
 *.pyo
 *.pyd
+
+# Distribution / packaging
 .Python
-*.egg-info/
-dist/
 build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+pip-wheel-metadata/
 
-# IDE / OS
-.idea/
-.vscode/
-*.swp
-.DS_Store
-Thumbs.db
+# PyInstaller
+*.manifest
+*.spec
 
-# Flask / local
+# 单元测试 / 覆盖率
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# 静态类型检查 / Lint 缓存
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.pytype/
+
+# ============================================================================
+# 虚拟环境（多种命名方式）
+# ============================================================================
+.venv/
+venv/
+ENV/
+env/
+.venv-*/
+ENV-*/
+
+# ============================================================================
+# 环境变量 & 日志
+# ============================================================================
 .env
+.env.*
+!.env.example
 *.log
+logs/
+
+# ============================================================================
+# Flask / SQLAlchemy 本地数据
+# ============================================================================
+instance/*.db
+instance/*.sqlite
+instance/*.sqlite3
+# instance/config.py 是仓库默认示例模板，不忽略；本地自定义请用 instance/config_local.py
+instance/config_local.py
+static/uploads/
+static/files/*.local.*
+
+# ============================================================================
+# macOS / Windows / 系统文件
+# ============================================================================
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+__MACOSX/
+
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ============================================================================
+# 编辑器 / IDE
+# ============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# ============================================================================
+# 临时文件
+# ============================================================================
+*.tmp
+*.bak
+*.swp
+~*.*

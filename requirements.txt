@@ -1,2 +1,28 @@
+# ----------------------------------------------------------------------------
+# Python 版本要求：>= 3.8
+# 本项目仅使用以下 **直接 import** 的第三方库；其余（例如 Werkzeug / MarkupSafe /
+# itsdangerous / click）均为 Flask / Jinja2 的传递依赖，安装时会自动拉取。
+# ----------------------------------------------------------------------------
+
+# -------- Web 框架 --------
+#   - Flask:  app/__init__.py  create_app()  Blueprint 注册
+#   - 版本约束 pin 到 3.1.x：4.x API 可能不兼容
 Flask==3.1.2
+
+# -------- 模板引擎（显式依赖，业务层直接 from jinja2 import Environment）--------
+#   - 使用方：app/main/services/config_generator_service.py
+#   - Flask 3.1.2 兼容的 Jinja2 范围是 >=3.1.2,<4
+Jinja2>=3.1.2,<4
+
+# -------- YAML 解析 / 序列化（全程 safe_load / safe_dump，allow_unicode=True）--------
+#   - 使用方：config_generator_service / data_io / text_to_yaml_service
 PyYAML==6.0.1
+
+# ============================================================================
+# 开发与调试可选依赖（按需手动安装，不列入默认 requirements）：
+#   pytest        单元测试
+#   pytest-cov    覆盖率
+#   ruff          lint & 格式化
+#   mypy          静态类型检查
+#   httpx         （或 requests）对 Flask test_client 之外做端到端测试
+# ============================================================================
