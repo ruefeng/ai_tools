@@ -11,7 +11,7 @@
 from flask import render_template, request, jsonify, make_response
 from . import main_bp
 
-from .services.generator_service import (
+from .services.config_generator_service import (
     list_template_names,
     list_scenarios,
     load_scenario,
@@ -24,11 +24,11 @@ from .utils.data_io import read_single_template_file
 
 
 # ---------------------------------------------------------------------------
-# 配置生成器（generator.html）
+# 配置生成器（config_generator.html）
 # ---------------------------------------------------------------------------
 @main_bp.route('/')
 def show_generator():
-    return render_template('generator.html')
+    return render_template('config_generator.html')
 
 
 @main_bp.route('/options')
