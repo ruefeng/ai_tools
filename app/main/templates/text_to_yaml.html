@@ -14,7 +14,14 @@
 <div class="column-full-width" spellcheck="false">
     <div class="header-row">
         <label for="t2y-input">文本输入（按行/按空白分列；第一行为 key）</label>
-        <button id="t2y-convert-btn" type="button">转换为 YAML/JSON</button>
+        <div class="header-actions">
+            <div class="toggle-wrapper" title="打开时，输出会在第二层级增加 links: 包裹原始数据">
+                <input type="checkbox" id="t2y-link-wrap-toggle" checked>
+                <span class="toggle-slider"></span>
+                <span class="toggle-label">添加 links 包裹</span>
+            </div>
+            <button id="t2y-convert-btn" type="button">转换为 YAML/JSON</button>
+        </div>
     </div>
     <textarea id="t2y-input" placeholder="示例：&#10;device ip vlan&#10;siteA 10.0.0.1 10&#10;siteB 10.0.0.2 20&#10;siteA 10.0.0.3 30"></textarea>
     <div id="t2y-input-msg" class="field-message" aria-live="polite"></div>

@@ -6,6 +6,7 @@
  *  - 在 JSON 文本框输入有效 JSON → YAML 框清空并渲染为格式化 YAML
  *  - 解析错误时在对应输入框下方的 message 区域显示错误文本
  *  - 下方表格文本区域：点击"转换表格"或输入时，也会同时写入 YAML 和 JSON
+ *  - 开关：打开时，输出会在第二层级增加 `links:` 包裹原始数据；关闭时原样输出
  */
 
 // ------------------------------
@@ -56,6 +57,8 @@ function main() {
   const jsonEl = document.getElementById('t2y-json');
   const inputEl = document.getElementById('t2y-input');
   const btn = document.getElementById('t2y-convert-btn');
+  const toggleEl = document.getElementById('t2y-link-wrap-toggle');
+  const toggleSlider = document.querySelector('.toggle-slider');
 
   const yamlMsg = document.getElementById('t2y-yaml-msg');
   const jsonMsg = document.getElementById('t2y-json-msg');
@@ -76,6 +79,21 @@ function main() {
     el.classList.toggle('is-error', !!isError);
   };
 
+  // 根据开关状态决定是否用 links 包裹
+  // 开关打开(checked=true)：每个一级 value 用 {links: value} 包裹
+  // 开关关闭(checked=false)：原样输出
+  const applyLinksWrap = (obj) => {
+    if (obj === null || obj === undefined) return obj;
+    if (toggleEl && toggleEl.checked) {
+      const result = {};
+      for (const [key, value] of Object.entries(obj)) {
+        result[key] = { links: value };
+      }
+      return result;
+    }
+    return obj;
+  };
+
   // 写入对象到两个展示框；调用方负责清空/错误提示
   const writeObjToBoth = (obj) => {
     if (obj === null || obj === undefined) {
@@ -83,14 +101,15 @@ function main() {
       jsonEl.value = '';
       return;
     }
+    const outputObj = applyLinksWrap(obj);
     try {
-      yamlEl.value = window.jsyaml.dump(obj, { noRefs: true, indent: 2 });
+      yamlEl.value = window.jsyaml.dump(outputObj, { noRefs: true, indent: 2 });
     } catch (e) {
       yamlEl.value = '';
       setMsg(yamlMsg, '写入 YAML 失败：' + (e && e.message ? e.message : String(e)), true);
     }
     try {
-      jsonEl.value = JSON.stringify(obj, null, 2);
+      jsonEl.value = JSON.stringify(outputObj, null, 2);
     } catch (e) {
       jsonEl.value = '';
       setMsg(jsonMsg, '写入 JSON 失败：' + (e && e.message ? e.message : String(e)), true);
@@ -113,11 +132,10 @@ function main() {
         jsonEl.value = '';
         return;
       }
-      jsonEl.value = JSON.stringify(obj, null, 2);
+      const outputObj = applyLinksWrap(obj);
+      jsonEl.value = JSON.stringify(outputObj, null, 2);
       setMsg(jsonMsg, '已由 YAML 自动生成', false);
-      // 保持 YAML 框可编辑，不动它
     } catch (e) {
-      // YAML 解析失败：保留用户输入，仅提示
       jsonEl.value = '';
       setMsg(yamlMsg, 'YAML 解析错误：' + (e && e.message ? e.message : String(e)), true);
     }
@@ -139,7 +157,8 @@ function main() {
         yamlEl.value = '';
         return;
       }
-      yamlEl.value = window.jsyaml.dump(obj, { noRefs: true, indent: 2 });
+      const outputObj = applyLinksWrap(obj);
+      yamlEl.value = window.jsyaml.dump(outputObj, { noRefs: true, indent: 2 });
       setMsg(yamlMsg, '已由 JSON 自动生成', false);
     } catch (e) {
       yamlEl.value = '';
@@ -169,10 +188,31 @@ function main() {
     }
   });
 
+  // --- 开关切换：重新触发表格转换 ---
+  const handleToggleChange = () => {
+    if (inputEl.value.trim()) {
+      handleTableInput();
+    }
+  };
+
   yamlEl.addEventListener('input', handleYamlInput);
   jsonEl.addEventListener('input', handleJsonInput);
   inputEl.addEventListener('input', handleTableInput);
   if (btn) btn.addEventListener('click', handleTableInput);
+
+  // 只有点击滑块才能切换开关（点击文字不会触发）
+  if (toggleSlider) {
+    toggleSlider.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleEl.checked = !toggleEl.checked;
+      toggleEl.dispatchEvent(new Event('change'));
+    });
+  }
+  // 直接点击 checkbox（虽然是隐藏的，但仍支持）
+  if (toggleEl) {
+    toggleEl.addEventListener('change', handleToggleChange);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', main);

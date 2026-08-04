@@ -725,3 +725,72 @@ button:hover{
   color: #d9534f;
   font-weight: 600;
 }
+
+/* ------------------------------------------------------------------
+   开关按钮（toggle switch）样式
+   ------------------------------------------------------------------ */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.toggle-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #23415e;
+}
+
+.toggle-wrapper input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: relative;
+    display: inline-block;
+    width: 42px;
+    height: 22px;
+    background-color: rgba(23, 105, 255, .25);
+    border-radius: 22px;
+    transition: background-color .25s ease;
+    border: 1px solid rgba(23, 105, 255, .35);
+}
+
+.toggle-slider::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(38, 104, 164, .25);
+    transition: transform .25s ease;
+}
+
+.toggle-wrapper input:checked + .toggle-slider {
+    background: linear-gradient(135deg, var(--brand), var(--brand2));
+    border-color: rgba(23, 105, 255, .5);
+}
+
+.toggle-wrapper input:checked + .toggle-slider::before {
+    transform: translateX(20px);
+}
+
+.toggle-wrapper input:focus + .toggle-slider {
+    box-shadow: 0 0 0 3px var(--field-focus);
+}
+
+.toggle-label {
+    white-space: nowrap;
+}
