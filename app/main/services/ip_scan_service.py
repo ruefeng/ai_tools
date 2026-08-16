@@ -18,6 +18,7 @@
 from __future__ import annotations
 
 import ipaddress
+import platform
 import subprocess
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -25,6 +26,19 @@ from typing import Any
 
 
 MAX_WORKERS = 16
+
+# ping -W 参数跨平台差异：
+#   macOS / BSD: -W 单位是毫秒，写 500
+#   Linux(iputils): -W 单位是秒，写 0.5
+#   Windows: -w 单位是毫秒，写 500
+_IS_WINDOWS = platform.system().lower().startswith('win')
+_IS_MACOS = platform.system().lower() == 'darwin'
+if _IS_WINDOWS:
+    _PING_TIMEOUT_ARGS = ['-w', '500']
+elif _IS_MACOS:
+    _PING_TIMEOUT_ARGS = ['-W', '500']
+else:
+    _PING_TIMEOUT_ARGS = ['-W', '0.5']
 
 
 def _parse_cidrs(text: str) -> list[str]:
@@ -59,10 +73,15 @@ def split_to_24(cidr: str) -> list[str]:
 
 
 def _ping_host(ip: str) -> bool:
-    """使用系统ping检测主机存活。"""
+    """使用系统ping检测主机存活。超时由 _PING_TIMEOUT_ARGS 控制（跨平台）。"""
     try:
-        cmd = ['ping', '-c', '1', '-W', '500', ip]
-        result = subprocess.run(cmd, capture_output=True, timeout=2)
+        cmd = ['ping', '-c', '1'] + _PING_TIMEOUT_ARGS + [ip]
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            timeout=2,
+            close_fds=True,
+        )
         return result.returncode == 0
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError):
         return False

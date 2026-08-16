@@ -38,5 +38,10 @@
             <div class="card__title">拓扑生成</div>
             <p class="card__desc">导入EXCEL/JSON格式的链路数据,生成拓扑图,支持拖动节点与保存布局。</p>
         </a>
+
+        <a class="card" role="listitem" href="{{ url_for('main.show_ip_info') }}">
+            <div class="card__title">我的公网IP</div>
+            <p class="card__desc">查看当前访问者的公网IP地址、地理位置、ASN/ISP等信息,同时提供JSON/纯文本API。</p>
+        </a>
     </div>
 {% endblock %}

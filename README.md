@@ -140,7 +140,7 @@ PY
 │       │   ├── config_generator_service.py   # 配置生成: list_scenarios / load_scenario / render_devices / parse_and_render / build_zip_bytes
 │       │   ├── ip_calc_service.py            # batch_calculate / calculate_ipv4|ipv6 / format_ipv4|ipv6
 │       │   ├── ip_scan_service.py            # _parse_cidrs / split_to_24 / _ping_host / scan_subnet / scan_multiple
-│       │   └── text_to_yaml_service.py       # parse_table_text (后端侧解析表格文本)
+│       │   └── ip_info_service.py            # get_requester_ip / enrich_ip_info (公网IP & GeoIP 查询)
 │       ├── utils/
 │       │   └── data_io.py                    # DATA_DIR / SINGLE_TEMPLATE_DIR / MULTI_TEMPLATE_DIR；read_json_file / read_yaml_file / read_single_template_file
 │       ├── templates/                        # 各子页面 Jinja2 模板（snake_case）

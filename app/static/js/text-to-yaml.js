@@ -80,14 +80,14 @@ function main() {
   };
 
   // 根据开关状态决定是否用 links 包裹
-  // 开关打开(checked=true)：每个一级 value 用 {links: value} 包裹
+  // 开关打开(checked=true)：每个一级 value 用 {links: [<value>]} 包裹（links 始终是数组，即使只有 1 条）
   // 开关关闭(checked=false)：原样输出
   const applyLinksWrap = (obj) => {
     if (obj === null || obj === undefined) return obj;
     if (toggleEl && toggleEl.checked) {
       const result = {};
       for (const [key, value] of Object.entries(obj)) {
-        result[key] = { links: value };
+        result[key] = { links: Array.isArray(value) ? value : [value] };
       }
       return result;
     }

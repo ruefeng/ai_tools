@@ -78,6 +78,8 @@ instance/*.sqlite3
 instance/config_local.py
 static/uploads/
 static/files/*.local.*
+# 拓扑演示数据（本地保留，不提交到仓库；文件名含拼写错误，仅作本地测试用）
+app/static/files/topology_optimz_position.json
 
 # ============================================================================
 # macOS / Windows / 系统文件

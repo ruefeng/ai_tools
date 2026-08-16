@@ -15,8 +15,14 @@ Flask==3.1.2
 Jinja2>=3.1.2,<4
 
 # -------- YAML 解析 / 序列化（全程 safe_load / safe_dump，allow_unicode=True）--------
-#   - 使用方：config_generator_service / data_io / text_to_yaml_service
+#   - 使用方：config_generator_service / data_io
 PyYAML==6.0.1
+
+# -------- 生产 WSGI 服务器（部署到 Linux 云主机时需要）--------
+#   - macOS 开发时可不安装；Linux 上部署必装
+#   - 与 Flask 3.x 完全兼容；worker 数推荐 = CPU核心数*2 + 1
+#   - 启动：gunicorn -w 4 -b 127.0.0.1:8000 wsgi:app
+gunicorn==22.0.0
 
 # ============================================================================
 # 开发与调试可选依赖（按需手动安装，不列入默认 requirements）：

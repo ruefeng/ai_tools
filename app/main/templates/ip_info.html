@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}我的公网IP信息{% endblock %}
+
+{% block content %}
+<div class="banner">我的公网IP信息</div>
+
+<p class="page-subtitle">
+    查看当前访问者的公网IP地址、地理位置、ASN/ISP等信息，同时提供JSON与纯文本API供程序调用。
+</p>
+
+<!-- 卡片：IP信息 -->
+<div class="column-full-width" style="margin-top: 18px;">
+    <div class="ip-info-card">
+        <div class="ip-info-card__header">
+            <div class="ip-info-card__badge">公网 IP</div>
+            <button id="ip-info-refresh" type="button" class="btn-secondary">刷新</button>
+        </div>
+        <div class="ip-info-card__ip">
+            <span id="ip-value">正在查询…</span>
+            <button id="ip-copy" type="button" class="btn-tertiary" title="复制IP">复制</button>
+        </div>
+        <div class="ip-info-card__type-row">
+            <span id="ip-type" class="chip">—</span>
+            <span id="ip-provider" class="chip chip--ghost">provider: —</span>
+        </div>
+
+        <div class="ip-info-card__grid">
+            <div class="info-block">
+                <div class="info-block__title">网络</div>
+                <div class="info-block__items">
+                    <div class="kv-item"><span class="kv-item__k">ASN</span><span id="kv-asn" class="kv-item__v">—</span></div>
+                    <div class="kv-item"><span class="kv-item__k">ISP</span><span id="kv-isp" class="kv-item__v">—</span></div>
+                    <div class="kv-item"><span class="kv-item__k">机构</span><span id="kv-org" class="kv-item__v">—</span></div>
+                    <div class="kv-item"><span class="kv-item__k">AS 名称</span><span id="kv-asdesc" class="kv-item__v">—</span></div>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <div class="info-block__title">地理</div>
+                <div class="info-block__items">
+                    <div class="kv-item"><span class="kv-item__k">国家/地区</span><span id="kv-country" class="kv-item__v">—</span></div>
+                    <div class="kv-item"><span class="kv-item__k">国家代码</span><span id="kv-cc" class="kv-item__v">—</span></div>
+                    <div class="kv-item"><span class="kv-item__k">省份/区域</span><span id="kv-region" class="kv-item__v">—</span></div>
+                    <div class="kv-item"><span class="kv-item__k">城市</span><span id="kv-city" class="kv-item__v">—</span></div>
+                    <div class="kv-item"><span class="kv-item__k">邮编</span><span id="kv-postal" class="kv-item__v">—</span></div>
+                    <div class="kv-item"><span class="kv-item__k">时区</span><span id="kv-tz" class="kv-item__v">—</span></div>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <div class="info-block__title">坐标</div>
+                <div class="info-block__items">
+                    <div class="kv-item"><span class="kv-item__k">纬度</span><span id="kv-lat" class="kv-item__v">—</span></div>
+                    <div class="kv-item"><span class="kv-item__k">经度</span><span id="kv-lon" class="kv-item__v">—</span></div>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <div class="info-block__title">API 调用</div>
+                <div class="info-block__items">
+                    <div class="kv-item"><span class="kv-item__k">JSON</span>
+                        <code class="kv-item__v kv-item__v--code">GET /main/api/my-ip</code>
+                    </div>
+                    <div class="kv-item"><span class="kv-item__k">纯文本</span>
+                        <code class="kv-item__v kv-item__v--code">GET /main/api/my-ip/plain</code>
+                    </div>
+                    <div class="kv-item"><span class="kv-item__k">示例 curl</span>
+                        <code class="kv-item__v kv-item__v--code">curl /main/api/my-ip</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="ip-info-message" class="field-message" aria-live="polite" style="margin-top: 12px;"></div>
+    </div>
+</div>
+
+<!-- 卡片：原始 JSON -->
+<div class="column-full-width" style="margin-top: 18px;">
+    <div class="header-row">
+        <label>原始 JSON 响应</label>
+        <button id="ip-json-copy" type="button" class="btn-secondary">复制 JSON</button>
+    </div>
+    <textarea id="ip-json-text" readonly placeholder="JSON 响应将展示在这里…" style="min-height: 200px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.85rem;"></textarea>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/ip-info.js') }}"></script>
+{% endblock %}

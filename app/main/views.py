@@ -20,6 +20,7 @@ from .services.config_generator_service import (
 )
 from .services.ip_calc_service import batch_calculate
 from .services.ip_scan_service import scan_cidr, scan_multiple
+from .services.ip_info_service import get_requester_ip, enrich_ip_info
 from .utils.data_io import read_single_template_file
 
 
@@ -143,3 +144,30 @@ def scan_ip():
 @main_bp.route('/topology')
 def show_topology():
     return render_template('topology.html')
+
+
+# ---------------------------------------------------------------------------
+# IP信息（ip_info.html）：展示访问者的公网IP & 地理位置/ASN
+#   - GET /main/ip-info             -> 页面
+#   - GET /main/api/my-ip           -> JSON API，可直接 curl
+#   - GET /main/api/my-ip/plain     -> 纯文本 IP，一行
+# ---------------------------------------------------------------------------
+@main_bp.route('/ip-info')
+def show_ip_info():
+    return render_template('ip_info.html')
+
+
+@main_bp.route('/api/my-ip', methods=['GET'])
+def api_my_ip():
+    client_ip = get_requester_ip(request)
+    info = enrich_ip_info(client_ip)
+    return jsonify(info)
+
+
+@main_bp.route('/api/my-ip/plain', methods=['GET'])
+def api_my_ip_plain():
+    client_ip = get_requester_ip(request) or ''
+    resp = make_response(client_ip + '\n')
+    resp.headers['Content-Type'] = 'text/plain; charset=utf-8'
+    resp.headers['Cache-Control'] = 'no-store'
+    return resp
