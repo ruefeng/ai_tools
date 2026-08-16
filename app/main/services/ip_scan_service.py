@@ -1,18 +1,18 @@
 """IP段拆分与扫描服务。
 
 扫描策略：
-- 使用系统ping检测主机存活
+- 使用系统ping检测主机存活（-n 跳过多余DNS反向查询）
 - 掩码 >=24：直接扫描该子网所有可用IP
 - 掩码 <24：拆分成多个/24段，并发扫描每段
 
+可靠性：
+- 每个IP首次ping失败后自动重试1次（应对云网络高并发ICMP丢包）
+- 跨平台ping参数：macOS/Windows 用毫秒，Linux 用秒
+
 性能参数：
-- ping参数：-c 1 -W 500（500ms超时）
+- ping超时：macOS/Windows 500ms，Linux 0.5s
 - 每/24段内部：16线程并发
 - /24段之间：16线程并发
-
-支持多CIDR输入：
-- 输入多行文本，每行一个CIDR
-- 返回合并后的结果
 """
 
 from __future__ import annotations
@@ -26,6 +26,7 @@ from typing import Any
 
 
 MAX_WORKERS = 16
+PING_RETRIES = 1
 
 # ping -W 参数跨平台差异：
 #   macOS / BSD: -W 单位是毫秒，写 500
@@ -72,19 +73,29 @@ def split_to_24(cidr: str) -> list[str]:
     return result
 
 
-def _ping_host(ip: str) -> bool:
-    """使用系统ping检测主机存活。超时由 _PING_TIMEOUT_ARGS 控制（跨平台）。"""
+def _ping_once(ip: str) -> bool:
+    """执行一次 ping。"""
     try:
-        cmd = ['ping', '-c', '1'] + _PING_TIMEOUT_ARGS + [ip]
+        cmd = ['ping', '-c', '1', '-n'] + _PING_TIMEOUT_ARGS + [ip]
         result = subprocess.run(
             cmd,
             capture_output=True,
-            timeout=2,
+            timeout=3,
             close_fds=True,
         )
         return result.returncode == 0
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError):
         return False
+
+
+def _ping_host(ip: str) -> bool:
+    """检测主机存活，首次失败后重试 PING_RETRIES 次。"""
+    if _ping_once(ip):
+        return True
+    for _ in range(PING_RETRIES):
+        if _ping_once(ip):
+            return True
+    return False
 
 
 def scan_subnet(subnet_cidr: str) -> list[str]:
