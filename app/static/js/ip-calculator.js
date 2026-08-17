@@ -390,6 +390,29 @@ function highlightSelection() {
     });
 }
 
+function copyText(text) {
+    if (!text) return false;
+    try {
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text);
+            return true;
+        }
+    } catch (e) { /* ignore */ }
+    try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
 function copySelectedCells(showAlert = true, showToast = false) {
     const selectedCells = document.querySelectorAll('#result-table td.selected');
     if (selectedCells.length === 0) {
@@ -414,22 +437,22 @@ function copySelectedCells(showAlert = true, showToast = false) {
         clipboardText += rowCells.join('\t') + '\n';
     }
 
-    navigator.clipboard.writeText(clipboardText).then(() => {
+    const ok = copyText(clipboardText);
+    if (ok) {
         if (showAlert) {
             alert('已复制到剪贴板！');
         }
         if (showToast) {
             showButtonToast('已复制！');
         }
-    }).catch(err => {
-        console.error('复制失败:', err);
+    } else {
         if (showAlert) {
             alert('复制失败，请手动复制');
         }
         if (showToast) {
             showButtonToast('复制失败');
         }
-    });
+    }
 }
 
 function showButtonToast(message) {
